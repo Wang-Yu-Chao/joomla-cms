@@ -628,16 +628,16 @@ class TemplatesModelStyle extends JModelAdmin
 		// Reset the home fields for the client_id.
 		$query = $db->getQuery(true)
 			->update('#__template_styles')
-			->set('home = ' .  $db->q('0'))
+			->set('home = ' .  $db->quote('0'))
 			->where('client_id = ' . (int) $style->client_id)
-			->where('home = ' . $db->q('1'));
+			->where('home = ' . $db->quote('1'));
 		$db->setQuery($query);
 		$db->execute();
 
 		// Set the new home style.
 		$query = $db->getQuery(true)
 			->update('#__template_styles')
-			->set('home = ' . $db->q('1'))
+			->set('home = ' . $db->quote('1'))
 			->where('id = ' . (int) $id);
 		$db->setQuery($query);
 		$db->execute();
@@ -688,7 +688,7 @@ class TemplatesModelStyle extends JModelAdmin
 		// Set the new home style.
 		$query = $db->getQuery(true)
 			->update('#__template_styles')
-			->set('home = ' . $db->q('0'))
+			->set('home = ' . $db->quote('0'))
 			->where('id = ' . (int) $id);
 		$db->setQuery($query);
 		$db->execute();

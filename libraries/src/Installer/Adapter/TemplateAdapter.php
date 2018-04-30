@@ -459,9 +459,9 @@ class TemplateAdapter extends InstallerAdapter
 		$db = $this->parent->getDbo();
 		$query = $db->getQuery(true)
 			->select('COUNT(*)')
-			->from($db->qn('#__template_styles'))
-			->where($db->qn('home') . ' = ' . $db->q('1'))
-			->where($db->qn('template') . ' = ' . $db->q($name));
+			->from($db->quoteName('#__template_styles'))
+			->where($db->quoteName('home') . ' = ' . $db->quote('1'))
+			->where($db->quoteName('template') . ' = ' . $db->quote($name));
 		$db->setQuery($query);
 
 		if ($db->loadResult() != 0)
@@ -519,13 +519,13 @@ class TemplateAdapter extends InstallerAdapter
 		// Set menu that assigned to the template back to default template
 		$subQuery = $db->getQuery(true)
 			->select('s.id')
-			->from($db->qn('#__template_styles', 's'))
-			->where($db->qn('s.template') . ' = ' . $db->q(strtolower($name)))
-			->where($db->qn('s.client_id') . ' = ' . $clientId);
+			->from($db->quoteName('#__template_styles', 's'))
+			->where($db->quoteName('s.template') . ' = ' . $db->quote(strtolower($name)))
+			->where($db->quoteName('s.client_id') . ' = ' . $clientId);
 		$query->clear()
-			->update($db->qn('#__menu'))
-			->set($db->qn('template_style_id') . ' = 0')
-			->where($db->qn('template_style_id') . ' IN (' . (string) $subQuery . ')');
+			->update($db->quoteName('#__menu'))
+			->set($db->quoteName('template_style_id') . ' = 0')
+			->where($db->quoteName('template_style_id') . ' IN (' . (string) $subQuery . ')');
 		$db->setQuery($query);
 		$db->execute();
 

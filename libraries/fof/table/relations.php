@@ -700,8 +700,8 @@ class FOFTableRelations
 
 		$query = $db->getQuery(true)
 			->select('*')
-			->from($db->qn($tableName))
-			->where($db->qn($remoteKey) . ' = ' . $db->q($value));
+			->from($db->quoteName($tableName))
+			->where($db->quoteName($remoteKey) . ' = ' . $db->quote($value));
 		$db->setQuery($query, 0, 1);
 
 		$data = $db->loadObject();
@@ -789,7 +789,7 @@ class FOFTableRelations
 		// Begin the query
 		$query = $db->getQuery(true)
 			->select('*')
-			->from($db->qn($tableName));
+			->from($db->quoteName($tableName));
 
 		// Do we have a pivot table?
 		$hasPivot = array_key_exists('pivotTable', $relation);
@@ -797,16 +797,16 @@ class FOFTableRelations
 		// If we don't have pivot it's a straightforward query
 		if (!$hasPivot)
 		{
-			$query->where($db->qn($remoteKey) . ' = ' . $db->q($value));
+			$query->where($db->quoteName($remoteKey) . ' = ' . $db->quote($value));
 		}
 		// If we have a pivot table we have to do a subquery
 		else
 		{
 			$subQuery = $db->getQuery(true)
-				->select($db->qn($relation['theirPivotKey']))
-				->from($db->qn($relation['pivotTable']))
-				->where($db->qn($relation['ourPivotKey']) . ' = ' . $db->q($value));
-			$query->where($db->qn($remoteKey) . ' IN (' . $subQuery . ')');
+				->select($db->quoteName($relation['theirPivotKey']))
+				->from($db->quoteName($relation['pivotTable']))
+				->where($db->quoteName($relation['ourPivotKey']) . ' = ' . $db->quote($value));
+			$query->where($db->quoteName($remoteKey) . ' IN (' . $subQuery . ')');
 		}
 
 		$db->setQuery($query);

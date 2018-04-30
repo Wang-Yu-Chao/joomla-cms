@@ -67,7 +67,7 @@ class JDatabaseDriverTest extends TestCaseDatabase
 	public function test__callQuote()
 	{
 		$this->assertThat(
-			$this->db->q('foo'),
+			$this->db->quote('foo'),
 			$this->equalTo($this->db->quote('foo')),
 			'Tests the q alias of quote.'
 		);
@@ -83,7 +83,7 @@ class JDatabaseDriverTest extends TestCaseDatabase
 	public function test__callQuoteName()
 	{
 		$this->assertThat(
-			$this->db->qn('foo'),
+			$this->db->quoteName('foo'),
 			$this->equalTo($this->db->quoteName('foo')),
 			'Tests the qn alias of quoteName.'
 		);

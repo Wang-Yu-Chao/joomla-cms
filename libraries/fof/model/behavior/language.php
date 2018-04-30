@@ -99,10 +99,10 @@ class FOFModelBehaviorLanguage extends FOFModelBehavior
 
 		// Alias
 		$alias = $model->getTableAlias();
-		$alias = $alias ? $db->qn($alias) . '.' : '';
+		$alias = $alias ? $db->quoteName($alias) . '.' : '';
 
 		$languages = array_map(array($db, 'quote'), $languages);
-		$query->where($alias . $db->qn($languageField) . ' IN (' . implode(',', $languages) . ')');
+		$query->where($alias . $db->quoteName($languageField) . ' IN (' . implode(',', $languages) . ')');
 	}
 
 	/**

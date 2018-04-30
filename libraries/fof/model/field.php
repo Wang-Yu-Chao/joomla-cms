@@ -251,11 +251,11 @@ abstract class FOFModelField
 	 */
 	public function getFieldName()
 	{
-		$name = $this->_db->qn($this->name);
+		$name = $this->_db->quoteName($this->name);
 
 		if ($this->table_alias)
 		{
-			$name = $this->_db->qn($this->table_alias) . '.' . $name;
+			$name = $this->_db->quoteName($this->table_alias) . '.' . $name;
 		}
 
 		return $name;

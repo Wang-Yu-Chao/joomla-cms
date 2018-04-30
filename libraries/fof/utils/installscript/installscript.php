@@ -624,7 +624,7 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true);
 		$query->select('id')
 			->from('#__assets')
-			->where($db->qn('name') . ' = ' . $db->q($this->componentName));
+			->where($db->quoteName('name') . ' = ' . $db->quote($this->componentName));
 		$db->setQuery($query);
 
 		try
@@ -642,7 +642,7 @@ abstract class FOFUtilsInstallscript
 			{
 				$query = $db->getQuery(true);
 				$query->delete('#__assets')
-					->where($db->qn('id') . ' = ' . $db->q($id));
+					->where($db->quoteName('id') . ' = ' . $db->quote($id));
 				$db->setQuery($query);
 
 				try
@@ -660,8 +660,8 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true);
 		$query->select('extension_id')
 			->from('#__extensions')
-			->where($db->qn('type') . ' = ' . $db->q('component'))
-			->where($db->qn('element') . ' = ' . $db->q($this->componentName));
+			->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+			->where($db->quoteName('element') . ' = ' . $db->quote($this->componentName));
 		$db->setQuery($query);
 		$ids = $db->loadColumn();
 
@@ -671,7 +671,7 @@ abstract class FOFUtilsInstallscript
 			{
 				$query = $db->getQuery(true);
 				$query->delete('#__extensions')
-					->where($db->qn('extension_id') . ' = ' . $db->q($id));
+					->where($db->quoteName('extension_id') . ' = ' . $db->quote($id));
 				$db->setQuery($query);
 
 				try
@@ -689,9 +689,9 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true);
 		$query->select('id')
 			->from('#__menu')
-			->where($db->qn('type') . ' = ' . $db->q('component'))
-			->where($db->qn('menutype') . ' = ' . $db->q('main'))
-			->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->componentName));
+			->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+			->where($db->quoteName('menutype') . ' = ' . $db->quote('main'))
+			->where($db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=' . $this->componentName));
 		$db->setQuery($query);
 		$ids = $db->loadColumn();
 
@@ -701,7 +701,7 @@ abstract class FOFUtilsInstallscript
 			{
 				$query = $db->getQuery(true);
 				$query->delete('#__menu')
-					->where($db->qn('id') . ' = ' . $db->q($id));
+					->where($db->quoteName('id') . ' = ' . $db->quote($id));
 				$db->setQuery($query);
 
 				try
@@ -727,8 +727,8 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true);
 		$query->select('extension_id')
 			->from('#__extensions')
-			->where($db->qn('type') . ' = ' . $db->q('component'))
-			->where($db->qn('element') . ' = ' . $db->q($this->componentName));
+			->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+			->where($db->quoteName('element') . ' = ' . $db->quote($this->componentName));
 		$db->setQuery($query);
 
 		try
@@ -750,7 +750,7 @@ abstract class FOFUtilsInstallscript
 			{
 				$query = $db->getQuery(true);
 				$query->delete('#__extensions')
-					->where($db->qn('extension_id') . ' = ' . $db->q($id));
+					->where($db->quoteName('extension_id') . ' = ' . $db->quote($id));
 				$db->setQuery($query);
 
 				try
@@ -768,7 +768,7 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true);
 		$query->select('id')
 			->from('#__assets')
-			->where($db->qn('name') . ' = ' . $db->q($this->componentName));
+			->where($db->quoteName('name') . ' = ' . $db->quote($this->componentName));
 		$db->setQuery($query);
 		$ids = $db->loadObjectList();
 
@@ -781,7 +781,7 @@ abstract class FOFUtilsInstallscript
 			{
 				$query = $db->getQuery(true);
 				$query->delete('#__assets')
-					->where($db->qn('id') . ' = ' . $db->q($id));
+					->where($db->quoteName('id') . ' = ' . $db->quote($id));
 				$db->setQuery($query);
 
 				try
@@ -801,9 +801,9 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true);
 		$query->select('id')
 			->from('#__menu')
-			->where($db->qn('type') . ' = ' . $db->q('component'))
-			->where($db->qn('menutype') . ' = ' . $db->q('main'))
-			->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->componentName));
+			->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+			->where($db->quoteName('menutype') . ' = ' . $db->quote('main'))
+			->where($db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=' . $this->componentName));
 		$db->setQuery($query);
 
 		try
@@ -823,9 +823,9 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true);
 		$query->select('id')
 			->from('#__menu')
-			->where($db->qn('type') . ' = ' . $db->q('component'))
-			->where($db->qn('menutype') . ' = ' . $db->q('main'))
-			->where($db->qn('link') . ' LIKE ' . $db->q('index.php?option=' . $this->componentName . '&%'));
+			->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+			->where($db->quoteName('menutype') . ' = ' . $db->quote('main'))
+			->where($db->quoteName('link') . ' LIKE ' . $db->quote('index.php?option=' . $this->componentName . '&%'));
 		$db->setQuery($query);
 
 		try
@@ -850,7 +850,7 @@ abstract class FOFUtilsInstallscript
 			{
 				$query = $db->getQuery(true);
 				$query->delete('#__menu')
-					->where($db->qn('id') . ' = ' . $db->q($id));
+					->where($db->quoteName('id') . ' = ' . $db->quote($id));
 				$db->setQuery($query);
 
 				try
@@ -924,7 +924,7 @@ abstract class FOFUtilsInstallscript
 						$sql = $db->getQuery(true)
 							->select('COUNT(*)')
 							->from('#__modules')
-							->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+							->where($db->quoteName('module') . ' = ' . $db->quote('mod_' . $module));
 						$db->setQuery($sql);
 
 						try
@@ -951,13 +951,13 @@ abstract class FOFUtilsInstallscript
 							list($modulePosition, $modulePublished) = $modulePreferences;
 
 							$sql = $db->getQuery(true)
-								->update($db->qn('#__modules'))
-								->set($db->qn('position') . ' = ' . $db->q($modulePosition))
-								->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+								->update($db->quoteName('#__modules'))
+								->set($db->quoteName('position') . ' = ' . $db->quote($modulePosition))
+								->where($db->quoteName('module') . ' = ' . $db->quote('mod_' . $module));
 
 							if ($modulePublished)
 							{
-								$sql->set($db->qn('published') . ' = ' . $db->q('1'));
+								$sql->set($db->quoteName('published') . ' = ' . $db->quote('1'));
 							}
 
 							$db->setQuery($sql);
@@ -977,17 +977,17 @@ abstract class FOFUtilsInstallscript
 								try
 								{
 									$query = $db->getQuery(true);
-									$query->select('MAX(' . $db->qn('ordering') . ')')
-										->from($db->qn('#__modules'))
-										->where($db->qn('position') . '=' . $db->q($modulePosition));
+									$query->select('MAX(' . $db->quoteName('ordering') . ')')
+										->from($db->quoteName('#__modules'))
+										->where($db->quoteName('position') . '=' . $db->quote($modulePosition));
 									$db->setQuery($query);
 									$position = $db->loadResult();
 									$position++;
 
 									$query = $db->getQuery(true);
-									$query->update($db->qn('#__modules'))
-										->set($db->qn('ordering') . ' = ' . $db->q($position))
-										->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+									$query->update($db->quoteName('#__modules'))
+										->set($db->quoteName('ordering') . ' = ' . $db->quote($position))
+										->where($db->quoteName('module') . ' = ' . $db->quote('mod_' . $module));
 									$db->setQuery($query);
 									$db->execute();
 								}
@@ -1001,14 +1001,14 @@ abstract class FOFUtilsInstallscript
 							try
 							{
 								$query = $db->getQuery(true);
-								$query->select('id')->from($db->qn('#__modules'))
-									->where($db->qn('module') . ' = ' . $db->q('mod_' . $module));
+								$query->select('id')->from($db->quoteName('#__modules'))
+									->where($db->quoteName('module') . ' = ' . $db->quote('mod_' . $module));
 								$db->setQuery($query);
 								$moduleid = $db->loadResult();
 
 								$query = $db->getQuery(true);
-								$query->select('*')->from($db->qn('#__modules_menu'))
-									->where($db->qn('moduleid') . ' = ' . $db->q($moduleid));
+								$query->select('*')->from($db->quoteName('#__modules_menu'))
+									->where($db->quoteName('moduleid') . ' = ' . $db->quote($moduleid));
 								$db->setQuery($query);
 								$assignments = $db->loadObjectList();
 								$isAssigned = !empty($assignments);
@@ -1066,9 +1066,9 @@ abstract class FOFUtilsInstallscript
 						// Was the plugin already installed?
 						$query = $db->getQuery(true)
 							->select('COUNT(*)')
-							->from($db->qn('#__extensions'))
-							->where($db->qn('element') . ' = ' . $db->q($plugin))
-							->where($db->qn('folder') . ' = ' . $db->q($folder));
+							->from($db->quoteName('#__extensions'))
+							->where($db->quoteName('element') . ' = ' . $db->quote($plugin))
+							->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
 						$db->setQuery($query);
 
 						try
@@ -1088,10 +1088,10 @@ abstract class FOFUtilsInstallscript
 						if ($published && !$count)
 						{
 							$query = $db->getQuery(true)
-								->update($db->qn('#__extensions'))
-								->set($db->qn('enabled') . ' = ' . $db->q('1'))
-								->where($db->qn('element') . ' = ' . $db->q($plugin))
-								->where($db->qn('folder') . ' = ' . $db->q($folder));
+								->update($db->quoteName('#__extensions'))
+								->set($db->quoteName('enabled') . ' = ' . $db->quote('1'))
+								->where($db->quoteName('element') . ' = ' . $db->quote($plugin))
+								->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
 							$db->setQuery($query);
 
 							try
@@ -1142,10 +1142,10 @@ abstract class FOFUtilsInstallscript
 					{
 						// Find the module ID
 						$sql = $db->getQuery(true)
-							->select($db->qn('extension_id'))
-							->from($db->qn('#__extensions'))
-							->where($db->qn('element') . ' = ' . $db->q('mod_' . $module))
-							->where($db->qn('type') . ' = ' . $db->q('module'));
+							->select($db->quoteName('extension_id'))
+							->from($db->quoteName('#__extensions'))
+							->where($db->quoteName('element') . ' = ' . $db->quote('mod_' . $module))
+							->where($db->quoteName('type') . ' = ' . $db->quote('module'));
 						$db->setQuery($sql);
 
 						try
@@ -1183,11 +1183,11 @@ abstract class FOFUtilsInstallscript
 					foreach ($plugins as $plugin => $published)
 					{
 						$sql = $db->getQuery(true)
-							->select($db->qn('extension_id'))
-							->from($db->qn('#__extensions'))
-							->where($db->qn('type') . ' = ' . $db->q('plugin'))
-							->where($db->qn('element') . ' = ' . $db->q($plugin))
-							->where($db->qn('folder') . ' = ' . $db->q($folder));
+							->select($db->quoteName('extension_id'))
+							->from($db->quoteName('#__extensions'))
+							->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+							->where($db->quoteName('element') . ' = ' . $db->quote($plugin))
+							->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
 						$db->setQuery($sql);
 
 						try
@@ -1549,10 +1549,10 @@ abstract class FOFUtilsInstallscript
 					{
 						// Find the module ID
 						$sql = $db->getQuery(true)
-							->select($db->qn('extension_id'))
-							->from($db->qn('#__extensions'))
-							->where($db->qn('element') . ' = ' . $db->q('mod_' . $module))
-							->where($db->qn('type') . ' = ' . $db->q('module'));
+							->select($db->quoteName('extension_id'))
+							->from($db->quoteName('#__extensions'))
+							->where($db->quoteName('element') . ' = ' . $db->quote('mod_' . $module))
+							->where($db->quoteName('type') . ' = ' . $db->quote('module'));
 						$db->setQuery($sql);
 						$id = $db->loadResult();
 						// Uninstall the module
@@ -1581,11 +1581,11 @@ abstract class FOFUtilsInstallscript
 					foreach ($plugins as $plugin)
 					{
 						$sql = $db->getQuery(true)
-							->select($db->qn('extension_id'))
-							->from($db->qn('#__extensions'))
-							->where($db->qn('type') . ' = ' . $db->q('plugin'))
-							->where($db->qn('element') . ' = ' . $db->q($plugin))
-							->where($db->qn('folder') . ' = ' . $db->q($folder));
+							->select($db->quoteName('extension_id'))
+							->from($db->quoteName('#__extensions'))
+							->where($db->quoteName('type') . ' = ' . $db->quote('plugin'))
+							->where($db->quoteName('element') . ' = ' . $db->quote($plugin))
+							->where($db->quoteName('folder') . ' = ' . $db->quote($folder));
 						$db->setQuery($sql);
 
 						$id = $db->loadResult();
@@ -1629,8 +1629,8 @@ abstract class FOFUtilsInstallscript
 			->join('LEFT', '#__extensions AS e ON m.component_id = e.extension_id')
 			->where('m.parent_id = 1')
 			->where('m.client_id = 1')
-			->where('m.menutype = ' . $db->q('main'))
-			->where($db->qn('e') . '.' . $db->qn('type') . ' = ' . $db->q('component'))
+			->where('m.menutype = ' . $db->quote('main'))
+			->where($db->quoteName('e') . '.' . $db->quoteName('type') . ' = ' . $db->quote('component'))
 			->where('e.element = ' . $db->quote($option));
 
 		$db->setQuery($query);
@@ -1660,9 +1660,9 @@ abstract class FOFUtilsInstallscript
 		// menu item with ID=1. However, some crappy upgrade scripts enjoy screwing it up. Hey, ho, the workaround
 		// way I go.
 		$query = $db->getQuery(true)
-			->select($db->qn('id'))
-			->from($db->qn('#__menu'))
-			->where($db->qn('id') . ' = ' . $db->q(1));
+			->select($db->quoteName('id'))
+			->from($db->quoteName('#__menu'))
+			->where($db->quoteName('id') . ' = ' . $db->quote(1));
 		$rootItemId = $db->setQuery($query)->loadResult();
 
 		if (is_null($rootItemId))
@@ -1670,9 +1670,9 @@ abstract class FOFUtilsInstallscript
 			// Guess what? The Problem has happened. Let's find the root node by title.
 			$rootItemId = null;
 			$query = $db->getQuery(true)
-				->select($db->qn('id'))
-				->from($db->qn('#__menu'))
-				->where($db->qn('title') . ' = ' . $db->q('Menu_Item_Root'));
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__menu'))
+				->where($db->quoteName('title') . ' = ' . $db->quote('Menu_Item_Root'));
 			$rootItemId = $db->setQuery($query, 0, 1)->loadResult();
 		}
 
@@ -1681,9 +1681,9 @@ abstract class FOFUtilsInstallscript
 			// For crying out loud, did that idiot changed the title too?! Let's find it by alias.
 			$rootItemId = null;
 			$query = $db->getQuery(true)
-				->select($db->qn('id'))
-				->from($db->qn('#__menu'))
-				->where($db->qn('alias') . ' = ' . $db->q('root'));
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__menu'))
+				->where($db->quoteName('alias') . ' = ' . $db->quote('root'));
 			$rootItemId = $db->setQuery($query, 0, 1)->loadResult();
 		}
 
@@ -1692,9 +1692,9 @@ abstract class FOFUtilsInstallscript
 			// Dude. Dude! Duuuuuuude! The alias is screwed up, too?! Find it by component ID.
 			$rootItemId = null;
 			$query = $db->getQuery(true)
-				->select($db->qn('id'))
-				->from($db->qn('#__menu'))
-				->where($db->qn('component_id') . ' = ' . $db->q('0'));
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__menu'))
+				->where($db->quoteName('component_id') . ' = ' . $db->quote('0'));
 			$rootItemId = $db->setQuery($query, 0, 1)->loadResult();
 		}
 
@@ -1703,9 +1703,9 @@ abstract class FOFUtilsInstallscript
 			// Your site is more of a "shite" than a "site". Let's try with minimum lft value.
 			$rootItemId = null;
 			$query = $db->getQuery(true)
-				->select($db->qn('id'))
-				->from($db->qn('#__menu'))
-				->order($db->qn('lft') . ' ASC');
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__menu'))
+				->order($db->quoteName('lft') . ' ASC');
 			$rootItemId = $db->setQuery($query, 0, 1)->loadResult();
 		}
 
@@ -1945,7 +1945,7 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true)
 			->update('#__menu AS m')
 			->join('LEFT', '#__extensions AS e ON m.component_id = e.extension_id')
-			->set($db->qn('published') . ' = ' . $db->q(1))
+			->set($db->quoteName('published') . ' = ' . $db->quote(1))
 			->where('m.parent_id = 1')
 			->where('m.client_id = 1')
 			->where('m.menutype = ' . $db->quote('main'))
@@ -1977,9 +1977,9 @@ abstract class FOFUtilsInstallscript
 		// We need to rebuild the menu based on its root item. By default this is the menu item with ID=1. However, some
 		// crappy upgrade scripts enjoy screwing it up. Hey, ho, the workaround way I go.
 		$query = $db->getQuery(true)
-			->select($db->qn('id'))
-			->from($db->qn('#__menu'))
-			->where($db->qn('id') . ' = ' . $db->q(1));
+			->select($db->quoteName('id'))
+			->from($db->quoteName('#__menu'))
+			->where($db->quoteName('id') . ' = ' . $db->quote(1));
 		$rootItemId = $db->setQuery($query)->loadResult();
 
 		if (is_null($rootItemId))
@@ -1987,9 +1987,9 @@ abstract class FOFUtilsInstallscript
 			// Guess what? The Problem has happened. Let's find the root node by title.
 			$rootItemId = null;
 			$query = $db->getQuery(true)
-				->select($db->qn('id'))
-				->from($db->qn('#__menu'))
-				->where($db->qn('title') . ' = ' . $db->q('Menu_Item_Root'));
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__menu'))
+				->where($db->quoteName('title') . ' = ' . $db->quote('Menu_Item_Root'));
 			$rootItemId = $db->setQuery($query, 0, 1)->loadResult();
 		}
 
@@ -1998,9 +1998,9 @@ abstract class FOFUtilsInstallscript
 			// For crying out loud, did that idiot changed the title too?! Let's find it by alias.
 			$rootItemId = null;
 			$query = $db->getQuery(true)
-				->select($db->qn('id'))
-				->from($db->qn('#__menu'))
-				->where($db->qn('alias') . ' = ' . $db->q('root'));
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__menu'))
+				->where($db->quoteName('alias') . ' = ' . $db->quote('root'));
 			$rootItemId = $db->setQuery($query, 0, 1)->loadResult();
 		}
 
@@ -2009,9 +2009,9 @@ abstract class FOFUtilsInstallscript
 			// Dude. Dude! Duuuuuuude! The alias is screwed up, too?! Find it by component ID.
 			$rootItemId = null;
 			$query = $db->getQuery(true)
-				->select($db->qn('id'))
-				->from($db->qn('#__menu'))
-				->where($db->qn('component_id') . ' = ' . $db->q('0'));
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__menu'))
+				->where($db->quoteName('component_id') . ' = ' . $db->quote('0'));
 			$rootItemId = $db->setQuery($query, 0, 1)->loadResult();
 		}
 
@@ -2020,9 +2020,9 @@ abstract class FOFUtilsInstallscript
 			// Your site is more of a "shite" than a "site". Let's try with minimum lft value.
 			$rootItemId = null;
 			$query = $db->getQuery(true)
-				->select($db->qn('id'))
-				->from($db->qn('#__menu'))
-				->order($db->qn('lft') . ' ASC');
+				->select($db->quoteName('id'))
+				->from($db->quoteName('#__menu'))
+				->order($db->quoteName('lft') . ' ASC');
 			$rootItemId = $db->setQuery($query, 0, 1)->loadResult();
 		}
 
@@ -2248,10 +2248,10 @@ abstract class FOFUtilsInstallscript
 		$db = FOFPlatform::getInstance()->getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
-			->from($db->qn($tableName))
-			->where($db->qn('extension_id') . ' = ' . $db->q($options['extension_id']))
-			->where($db->qn('type') . ' = ' . $db->q($options['type']))
-			->where($db->qn('title_key') . ' = ' . $db->q($options['title_key']));
+			->from($db->quoteName($tableName))
+			->where($db->quoteName('extension_id') . ' = ' . $db->quote($options['extension_id']))
+			->where($db->quoteName('type') . ' = ' . $db->quote($options['type']))
+			->where($db->quoteName('title_key') . ' = ' . $db->quote($options['title_key']));
 		$existingRow = $db->setQuery($query)->loadAssoc();
 
 		// Is the existing definition the same as the one we're trying to save (ignore the enabled flag)?
@@ -2281,10 +2281,10 @@ abstract class FOFUtilsInstallscript
 
 			// Otherwise it's not the same row. Remove the old row before insert a new one.
 			$query = $db->getQuery(true)
-				->delete($db->qn($tableName))
-				->where($db->q('extension_id') . ' = ' . $db->q($options['extension_id']))
-				->where($db->q('type') . ' = ' . $db->q($options['type']))
-				->where($db->q('title_key') . ' = ' . $db->q($options['title_key']));
+				->delete($db->quoteName($tableName))
+				->where($db->quote('extension_id') . ' = ' . $db->quote($options['extension_id']))
+				->where($db->quote('type') . ' = ' . $db->quote($options['type']))
+				->where($db->quote('title_key') . ' = ' . $db->quote($options['title_key']));
 			$db->setQuery($query)->execute();
 		}
 
@@ -2317,8 +2317,8 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true);
 		$query->select('extension_id')
 			->from('#__extensions')
-			->where($db->qn('type') . ' = ' . $db->q('component'))
-			->where($db->qn('element') . ' = ' . $db->q($this->componentName));
+			->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+			->where($db->quoteName('element') . ' = ' . $db->quote($this->componentName));
 		$db->setQuery($query);
 
 		try
@@ -2363,8 +2363,8 @@ abstract class FOFUtilsInstallscript
 		$query = $db->getQuery(true);
 		$query->select('extension_id')
 			->from('#__extensions')
-			->where($db->qn('type') . ' = ' . $db->q('component'))
-			->where($db->qn('element') . ' = ' . $db->q($this->componentName));
+			->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+			->where($db->quoteName('element') . ' = ' . $db->quote($this->componentName));
 		$db->setQuery($query);
 
 		try
@@ -2384,8 +2384,8 @@ abstract class FOFUtilsInstallscript
 		$extension_id = array_shift($ids);
 
 		$query = $db->getQuery(true)
-			->delete($db->qn('#__postinstall_messages'))
-			->where($db->qn('extension_id') . ' = ' . $db->q($extension_id));
+			->delete($db->quoteName('#__postinstall_messages'))
+			->where($db->quoteName('extension_id') . ' = ' . $db->quote($extension_id));
 
 		try
 		{

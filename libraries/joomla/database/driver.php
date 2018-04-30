@@ -861,7 +861,7 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 				}
 
 				$null = $col->Null == 'YES' ? 'NULL' : 'NOT NULL';
-				$default = is_null($col->Default) ? '' : "DEFAULT '" . $this->q($col->Default) . "'";
+				$default = is_null($col->Default) ? '' : "DEFAULT '" . $this->quote($col->Default) . "'";
 				$columnMods[] = "MODIFY COLUMN `{$col->Field}` {$col->Type} CHARACTER SET $charset COLLATE $newCollation $null $default";
 			}
 		}

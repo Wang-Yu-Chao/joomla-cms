@@ -49,9 +49,9 @@ class FOFModelBehaviorEnabled extends FOFModelBehavior
 
 		// Alias
 		$alias = $model->getTableAlias();
-		$alias = $alias ? $db->qn($alias) . '.' : '';
+		$alias = $alias ? $db->quoteName($alias) . '.' : '';
 
-		$query->where($alias . $db->qn($enabledField) . ' = ' . $db->q(1));
+		$query->where($alias . $db->quoteName($enabledField) . ' = ' . $db->quote(1));
 	}
 
 	/**

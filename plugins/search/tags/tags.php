@@ -118,7 +118,7 @@ class PlgSearchTags extends JPlugin
 
 		$query->where('(a.title LIKE ' . $text . ' OR a.alias LIKE ' . $text . ')');
 
-		$query->where($db->qn('a.published') . ' = 1');
+		$query->where($db->quoteName('a.published') . ' = 1');
 
 		if (!$user->authorise('core.admin'))
 		{

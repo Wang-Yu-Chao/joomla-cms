@@ -190,9 +190,9 @@ ENDBLOCK;
 		$db = FOFPlatform::getInstance()->getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
-			->from($db->qn('#__extensions'))
-			->where($db->qn('type') . ' = ' . $db->q('component'))
-			->where($db->qn('element') . ' = ' . $db->q($this->component));
+			->from($db->quoteName('#__extensions'))
+			->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+			->where($db->quoteName('element') . ' = ' . $db->quote($this->component));
 		$db->setQuery($query);
 		$extension = $db->loadObject();
 
@@ -287,9 +287,9 @@ ENDBLOCK;
 	{
 		$db = FOFPlatform::getInstance()->getDbo();
 		$query = $db->getQuery(true)
-					->select($db->qn('update_site_id'))
-					->from($db->qn('#__update_sites_extensions'))
-					->where($db->qn('extension_id') . ' = ' . $db->q($this->extension_id));
+					->select($db->quoteName('update_site_id'))
+					->from($db->quoteName('#__update_sites_extensions'))
+					->where($db->quoteName('extension_id') . ' = ' . $db->quote($this->extension_id));
 		$db->setQuery($query);
 		$updateSiteIds = $db->loadColumn(0);
 
@@ -432,8 +432,8 @@ ENDBLOCK;
 		{
 			$query = $db->getQuery(true)
 						->select('*')
-						->from($db->qn('#__update_sites'))
-						->where($db->qn('update_site_id') . ' = ' . $db->q($id));
+						->from($db->quoteName('#__update_sites'))
+						->where($db->quoteName('update_site_id') . ' = ' . $db->quote($id));
 			$db->setQuery($query);
 			$aSite = $db->loadObject();
 
@@ -486,13 +486,13 @@ ENDBLOCK;
 				// Delete update sites
 				$query = $db->getQuery(true)
 							->delete('#__update_sites')
-							->where($db->qn('update_site_id') . ' IN (' . implode(',', $obsoleteIDsQuoted) . ')');
+							->where($db->quoteName('update_site_id') . ' IN (' . implode(',', $obsoleteIDsQuoted) . ')');
 				$db->setQuery($query)->execute();
 
 				// Delete update sites to extension ID records
 				$query = $db->getQuery(true)
 							->delete('#__update_sites_extensions')
-							->where($db->qn('update_site_id') . ' IN (' . implode(',', $obsoleteIDsQuoted) . ')');
+							->where($db->quoteName('update_site_id') . ' IN (' . implode(',', $obsoleteIDsQuoted) . ')');
 				$db->setQuery($query)->execute();
 			}
 			catch (\Exception $e)
@@ -532,17 +532,17 @@ ENDBLOCK;
 
 		// Find update sites where the name OR the location matches BUT they are not one of the update site IDs
 		$query = $db->getQuery(true)
-					->select($db->qn('update_site_id'))
-					->from($db->qn('#__update_sites'))
+					->select($db->quoteName('update_site_id'))
+					->from($db->quoteName('#__update_sites'))
 					->where(
-						'((' . $db->qn('name') . ' = ' . $db->q($this->updateSiteName) . ') OR ' .
-						'(' . $db->qn('location') . ' = ' . $db->q($this->updateSite) . '))'
+						'((' . $db->quoteName('name') . ' = ' . $db->quote($this->updateSiteName) . ') OR ' .
+						'(' . $db->quoteName('location') . ' = ' . $db->quote($this->updateSite) . '))'
 					);
 
 		if (!empty($updateSiteIDs))
 		{
 			$updateSitesQuoted = array_map(array($db, 'quote'), $updateSiteIDs);
-			$query->where($db->qn('update_site_id') . ' NOT IN (' . implode(',', $updateSitesQuoted) . ')');
+			$query->where($db->quoteName('update_site_id') . ' NOT IN (' . implode(',', $updateSitesQuoted) . ')');
 		}
 
 		try
@@ -556,13 +556,13 @@ ENDBLOCK;
 				// Delete update sites
 				$query = $db->getQuery(true)
 							->delete('#__update_sites')
-							->where($db->qn('update_site_id') . ' IN (' . implode(',', $obsoleteIDsQuoted) . ')');
+							->where($db->quoteName('update_site_id') . ' IN (' . implode(',', $obsoleteIDsQuoted) . ')');
 				$db->setQuery($query)->execute();
 
 				// Delete update sites to extension ID records
 				$query = $db->getQuery(true)
 							->delete('#__update_sites_extensions')
-							->where($db->qn('update_site_id') . ' IN (' . implode(',', $obsoleteIDsQuoted) . ')');
+							->where($db->quoteName('update_site_id') . ' IN (' . implode(',', $obsoleteIDsQuoted) . ')');
 				$db->setQuery($query)->execute();
 			}
 		}
@@ -636,17 +636,17 @@ ENDBLOCK;
 			if (version_compare(JVERSION, '2.5.0', 'ge'))
 			{
 				$query = $db->getQuery(true)
-							->update($db->qn('#__update_sites'))
-							->set($db->qn('last_check_timestamp') . ' = ' . $db->q('0'))
-							->where($db->qn('update_site_id') .' IN ('.implode(', ', $updateSiteIds).')');
+							->update($db->quoteName('#__update_sites'))
+							->set($db->quoteName('last_check_timestamp') . ' = ' . $db->quote('0'))
+							->where($db->quoteName('update_site_id') .' IN ('.implode(', ', $updateSiteIds).')');
 				$db->setQuery($query);
 				$db->execute();
 			}
 
 			// Remove cached component update info from #__updates
 			$query = $db->getQuery(true)
-						->delete($db->qn('#__updates'))
-						->where($db->qn('update_site_id') .' IN ('.implode(', ', $updateSiteIds).')');
+						->delete($db->quoteName('#__updates'))
+						->where($db->quoteName('update_site_id') .' IN ('.implode(', ', $updateSiteIds).')');
 			$db->setQuery($query);
 			$db->execute();
 		}
@@ -660,8 +660,8 @@ ENDBLOCK;
 		// Get the update record from the database
 		$query = $db->getQuery(true)
 					->select('*')
-					->from($db->qn('#__updates'))
-					->where($db->qn('extension_id') . ' = ' . $db->q($this->extension_id));
+					->from($db->quoteName('#__updates'))
+					->where($db->quoteName('extension_id') . ' = ' . $db->quote($this->extension_id));
 		$db->setQuery($query);
 
 		try
@@ -948,9 +948,9 @@ ENDBLOCK;
 		$db = FOFPlatform::getInstance()->getDbo();
 
 		$query = $db->getQuery(true)
-					->select($db->qn('value'))
-					->from($db->qn($this->commonTable))
-					->where($db->qn('key') . ' = ' . $db->q($dbKey));
+					->select($db->quoteName('value'))
+					->from($db->quoteName($this->commonTable))
+					->where($db->quoteName('key') . ' = ' . $db->quote($dbKey));
 
 		$result = $db->setQuery($query)->loadResult();
 
@@ -978,16 +978,16 @@ ENDBLOCK;
 
 		$query = $db->getQuery(true)
 					->select('COUNT(*)')
-					->from($db->qn($this->commonTable))
-					->where($db->qn('key') . ' = ' . $db->q($dbKey));
+					->from($db->quoteName($this->commonTable))
+					->where($db->quoteName('key') . ' = ' . $db->quote($dbKey));
 		$count = $db->setQuery($query)->loadResult();
 
 		if ($count)
 		{
 			$query = $db->getQuery(true)
-						->update($db->qn($this->commonTable))
-						->set($db->qn('value') . ' = ' . $db->q($value))
-						->where($db->qn('key') . ' = ' . $db->q($dbKey));
+						->update($db->quoteName($this->commonTable))
+						->set($db->quoteName('value') . ' = ' . $db->quote($value))
+						->where($db->quoteName('key') . ' = ' . $db->quote($dbKey));
 			$db->setQuery($query)->execute();
 		}
 		else

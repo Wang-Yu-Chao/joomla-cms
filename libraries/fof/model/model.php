@@ -2072,16 +2072,16 @@ class FOFModel extends FOFUtilsObject
 
 		if ($alias)
 		{
-			$alias = ' AS ' . $db->qn($alias);
+			$alias = ' AS ' . $db->quoteName($alias);
 		}
 		else
 		{
 			$alias = '';
 		}
 
-		$select = $this->getTableAlias() ? $db->qn($this->getTableAlias()) . '.*' : $db->qn($tableName) . '.*';
+		$select = $this->getTableAlias() ? $db->quoteName($this->getTableAlias()) . '.*' : $db->quoteName($tableName) . '.*';
 
-		$query->select($select)->from($db->qn($tableName) . $alias);
+		$query->select($select)->from($db->quoteName($tableName) . $alias);
 
 		if (!$overrideLimits)
 		{
@@ -2092,18 +2092,18 @@ class FOFModel extends FOFUtilsObject
 				$order = $tableKey;
 			}
 
-			$order = $db->qn($order);
+			$order = $db->quoteName($order);
 
 			if ($alias)
 			{
-				$order = $db->qn($this->getTableAlias()) . '.' . $order;
+				$order = $db->quoteName($this->getTableAlias()) . '.' . $order;
 			}
 
 			$dir = strtoupper($this->getState('filter_order_Dir', 'ASC', 'cmd'));
 			$dir = in_array($dir, array('DESC', 'ASC')) ? $dir : 'ASC';
 
 			// If the table cache is broken you may end up with an empty order by.
-			if (!empty($order) && ($order != $db->qn('')))
+			if (!empty($order) && ($order != $db->quoteName('')))
 			{
 				$query->order($order . ' ' . $dir);
 			}

@@ -82,13 +82,13 @@ class JDatabaseQueryTest extends TestCase
 		);
 
 		$this->assertThat(
-			$this->_instance->q('foo'),
+			$this->_instance->quote('foo'),
 			$this->equalTo($this->_instance->quote('foo')),
 			'Tests the q alias of quote.'
 		);
 
 		$this->assertThat(
-			$this->_instance->qn('foo'),
+			$this->_instance->quoteName('foo'),
 			$this->equalTo($this->_instance->quoteName('foo')),
 			'Tests the qn alias of quoteName.'
 		);
@@ -1952,8 +1952,8 @@ class JDatabaseQueryTest extends TestCase
 	public function testFormat()
 	{
 		$result = $this->_instance->format('SELECT %n FROM %n WHERE %n = %a', 'foo', '#__bar', 'id', 10);
-		$expected = 'SELECT ' . $this->_instance->qn('foo') . ' FROM ' . $this->_instance->qn('#__bar') .
-			' WHERE ' . $this->_instance->qn('id') . ' = 10';
+		$expected = 'SELECT ' . $this->_instance->quoteName('foo') . ' FROM ' . $this->_instance->quoteName('#__bar') .
+			' WHERE ' . $this->_instance->quoteName('id') . ' = 10';
 		$this->assertThat(
 			$result,
 			$this->equalTo($expected),
@@ -1961,9 +1961,9 @@ class JDatabaseQueryTest extends TestCase
 		);
 
 		$result = $this->_instance->format('SELECT %n FROM %n WHERE %n = %t OR %3$n = %Z', 'id', '#__foo', 'date');
-		$expected = 'SELECT ' . $this->_instance->qn('id') . ' FROM ' . $this->_instance->qn('#__foo') .
-			' WHERE ' . $this->_instance->qn('date') . ' = ' . $this->_instance->currentTimestamp() .
-			' OR ' . $this->_instance->qn('date') . ' = ' . $this->_instance->nullDate(true);
+		$expected = 'SELECT ' . $this->_instance->quoteName('id') . ' FROM ' . $this->_instance->quoteName('#__foo') .
+			' WHERE ' . $this->_instance->quoteName('date') . ' = ' . $this->_instance->currentTimestamp() .
+			' OR ' . $this->_instance->quoteName('date') . ' = ' . $this->_instance->nullDate(true);
 		$this->assertThat(
 			$result,
 			$this->equalTo($expected),

@@ -87,7 +87,7 @@ class FOFFormFieldUsergroup extends JFormFieldUsergroup implements FOFFormField
 		$query->from('#__usergroups AS a');
 		$query->group('a.id, a.title');
 		$query->order('a.id ASC');
-		$query->order($query->qn('title') . ' ASC');
+		$query->order($query->quoteName('title') . ' ASC');
 
 		// Get the options.
 		$db->setQuery($query);
@@ -129,7 +129,7 @@ class FOFFormFieldUsergroup extends JFormFieldUsergroup implements FOFFormField
 		$query->from('#__usergroups AS a');
 		$query->group('a.id, a.title');
 		$query->order('a.id ASC');
-		$query->order($query->qn('title') . ' ASC');
+		$query->order($query->quoteName('title') . ' ASC');
 
 		// Get the options.
 		$db->setQuery($query);

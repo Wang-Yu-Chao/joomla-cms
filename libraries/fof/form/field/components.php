@@ -132,21 +132,21 @@ class FOFFormFieldComponents extends JFormFieldList implements FOFFormField
 		foreach ($client_ids as &$client_id)
 		{
 			$client_id = (int) trim($client_id);
-			$client_id = $db->q($client_id);
+			$client_id = $db->quote($client_id);
 		}
 
 		$query = $db->getQuery(true)
 			->select(
 				array(
-					$db->qn('name'),
-					$db->qn('element'),
-					$db->qn('client_id'),
-					$db->qn('manifest_cache'),
+					$db->quoteName('name'),
+					$db->quoteName('element'),
+					$db->quoteName('client_id'),
+					$db->quoteName('manifest_cache'),
 				)
 			)
-			->from($db->qn('#__extensions'))
-			->where($db->qn('type') . ' = ' . $db->q('component'))
-			->where($db->qn('client_id') . ' IN (' . implode(',', $client_ids) . ')');
+			->from($db->quoteName('#__extensions'))
+			->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+			->where($db->quoteName('client_id') . ' IN (' . implode(',', $client_ids) . ')');
 		$db->setQuery($query);
 		$components = $db->loadObjectList('element');
 

@@ -154,7 +154,7 @@ class FOFTableNested extends FOFTable
             $query = $this->_db->getQuery(true);
             $query->delete();
             $query->from($this->_tbl);
-            $query->where($this->_tbl_key . ' = ' . $this->_db->q($pk));
+            $query->where($this->_tbl_key . ' = ' . $this->_db->quote($pk));
 
             $this->_db->setQuery($query)->execute();
 
@@ -171,8 +171,8 @@ class FOFTableNested extends FOFTable
         $myLeft  = $this->lft;
         $myRight = $this->rgt;
 
-        $fldLft = $db->qn($this->getColumnAlias('lft'));
-        $fldRgt = $db->qn($this->getColumnAlias('rgt'));
+        $fldLft = $db->quoteName($this->getColumnAlias('lft'));
+        $fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
         // Move all siblings to the left
         $width = $this->rgt - $this->lft + 1;
@@ -184,16 +184,16 @@ class FOFTableNested extends FOFTable
         {
             // Shrink lft values
             $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
+                        ->update($db->quoteName($this->getTableName()))
                         ->set($fldLft . ' = ' . $fldLft . ' - '.$width)
-                        ->where($fldLft . ' > ' . $db->q($myLeft));
+                        ->where($fldLft . ' > ' . $db->quote($myLeft));
             $db->setQuery($query)->execute();
 
             // Shrink rgt values
             $query = $db->getQuery(true)
-                        ->update($db->qn($this->getTableName()))
+                        ->update($db->quoteName($this->getTableName()))
                         ->set($fldRgt . ' = ' . $fldRgt . ' - '.$width)
-                        ->where($fldRgt . ' > ' . $db->q($myRight));
+                        ->where($fldRgt . ' > ' . $db->quote($myRight));
             $db->setQuery($query)->execute();
 
             // Commit the transaction
@@ -345,11 +345,11 @@ class FOFTableNested extends FOFTable
 		$db = $this->getDbo();
 
 		// Get the lft/rgt names
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
 		$query = $db->getQuery(true)
 			->select('MAX(' . $fldRgt . ')')
-			->from($db->qn($this->getTableName()));
+			->from($db->quoteName($this->getTableName()));
 		$maxRgt = $db->setQuery($query, 0, 1)->loadResult();
 
 		if (empty($maxRgt))
@@ -388,8 +388,8 @@ class FOFTableNested extends FOFTable
 		$db = $this->getDbo();
 
 		// Get the field names
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
 
         // Nullify the PK, so a new record will be created
         $pk = $this->getKeyName();
@@ -412,15 +412,15 @@ class FOFTableNested extends FOFTable
 		{
 			// Make a hole (2 queries)
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
+				->update($db->quoteName($this->getTableName()))
 				->set($fldLft . ' = ' . $fldLft . '+2')
-				->where($fldLft . ' > ' . $db->q($myLeft));
+				->where($fldLft . ' > ' . $db->quote($myLeft));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
+				->update($db->quoteName($this->getTableName()))
 				->set($fldRgt . ' = ' . $fldRgt . '+ 2')
-				->where($fldRgt . '>' . $db->q($myLeft));
+				->where($fldRgt . '>' . $db->quote($myLeft));
 			$db->setQuery($query)->execute();
 
 			// Insert the new node
@@ -463,8 +463,8 @@ class FOFTableNested extends FOFTable
 		$db = $this->getDbo();
 
 		// Get the field names
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
 
         // Nullify the PK, so a new record will be created
         $pk = $this->getKeyName();
@@ -487,15 +487,15 @@ class FOFTableNested extends FOFTable
 		{
 			// Make a hole (2 queries)
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
+				->update($db->quoteName($this->getTableName()))
 				->set($fldRgt . ' = ' . $fldRgt . '+2')
-				->where($fldRgt . '>=' . $db->q($myRight));
+				->where($fldRgt . '>=' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
+				->update($db->quoteName($this->getTableName()))
 				->set($fldLft . ' = ' . $fldLft . '+2')
-				->where($fldLft . '>' . $db->q($myRight));
+				->where($fldLft . '>' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Insert the new node
@@ -553,8 +553,8 @@ class FOFTableNested extends FOFTable
 		$db = $this->getDbo();
 
 		// Get the field names
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
 
         // Nullify the PK, so a new record will be created
         $pk = $this->getKeyName();
@@ -577,16 +577,16 @@ class FOFTableNested extends FOFTable
 		{
 			$db->setQuery(
 				$db->getQuery(true)
-					->update($db->qn($this->getTableName()))
+					->update($db->quoteName($this->getTableName()))
 					->set($fldLft . ' = ' . $fldLft . '+2')
-					->where($fldLft . ' >= ' . $db->q($myLeft))
+					->where($fldLft . ' >= ' . $db->quote($myLeft))
 			)->execute();
 
 			$db->setQuery(
 				$db->getQuery(true)
-					->update($db->qn($this->getTableName()))
+					->update($db->quoteName($this->getTableName()))
 					->set($fldRgt . ' = ' . $fldRgt . '+2')
-					->where($fldRgt . ' > ' . $db->q($myLeft))
+					->where($fldRgt . ' > ' . $db->quote($myLeft))
 			)->execute();
 
 			$this->store();
@@ -626,8 +626,8 @@ class FOFTableNested extends FOFTable
 		$db = $this->getDbo();
 
 		// Get the field names
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
 
         // Nullify the PK, so a new record will be created
         $pk = $this->getKeyName();
@@ -646,16 +646,16 @@ class FOFTableNested extends FOFTable
 		{
 			$db->setQuery(
 				$db->getQuery(true)
-					->update($db->qn($this->getTableName()))
+					->update($db->quoteName($this->getTableName()))
 					->set($fldRgt . ' = ' . $fldRgt . '+2')
-					->where($fldRgt . ' > ' . $db->q($myRight))
+					->where($fldRgt . ' > ' . $db->quote($myRight))
 			)->execute();
 
 			$db->setQuery(
 				$db->getQuery(true)
-					->update($db->qn($this->getTableName()))
+					->update($db->quoteName($this->getTableName()))
 					->set($fldLft . ' = ' . $fldLft . '+2')
-					->where($fldLft . ' > ' . $db->q($myRight))
+					->where($fldLft . ' > ' . $db->quote($myRight))
 			)->execute();
 
 			$this->store();
@@ -719,7 +719,7 @@ class FOFTableNested extends FOFTable
 		$db = $this->getDbo();
 		$table = $this->getClone();
 		$table->reset();
-		$leftSibling = $table->whereRaw($db->qn($this->getColumnAlias('rgt')) . ' = ' . $db->q($this->lft - 1))
+		$leftSibling = $table->whereRaw($db->quoteName($this->getColumnAlias('rgt')) . ' = ' . $db->quote($this->lft - 1))
 			->get(0, 1)->current();
 
 		// Move the node
@@ -765,7 +765,7 @@ class FOFTableNested extends FOFTable
 
 		$table = $this->getClone();
 		$table->reset();
-		$rightSibling = $table->whereRaw($db->qn($this->getColumnAlias('lft')) . ' = ' . $db->q($this->rgt + 1))
+		$rightSibling = $table->whereRaw($db->quoteName($this->getColumnAlias('lft')) . ' = ' . $db->quote($this->rgt + 1))
 			->get(0, 1)->current();
 
 		// Move the node
@@ -802,8 +802,8 @@ class FOFTableNested extends FOFTable
         }
 
 		$db    = $this->getDbo();
-		$left  = $db->qn($this->getColumnAlias('lft'));
-		$right = $db->qn($this->getColumnAlias('rgt'));
+		$left  = $db->quoteName($this->getColumnAlias('lft'));
+		$right = $db->quoteName($this->getColumnAlias('rgt'));
 
 		// Get node metrics
 		$myLeft  = $this->lft;
@@ -820,50 +820,50 @@ class FOFTableNested extends FOFTable
 		{
 			// Temporary remove subtree being moved
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set("$left = " . $db->q(0) . " - $left")
-				->set("$right = " . $db->q(0) . " - $right")
-				->where($left . ' >= ' . $db->q($myLeft))
-				->where($right . ' <= ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set("$left = " . $db->quote(0) . " - $left")
+				->set("$right = " . $db->quote(0) . " - $right")
+				->where($left . ' >= ' . $db->quote($myLeft))
+				->where($right . ' <= ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Close hole left behind
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $left . ' - ' . $db->q($myWidth))
-				->where($left . ' > ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $left . ' - ' . $db->quote($myWidth))
+				->where($left . ' > ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($right . ' = ' . $right . ' - ' . $db->q($myWidth))
-				->where($right . ' > ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($right . ' = ' . $right . ' - ' . $db->quote($myWidth))
+				->where($right . ' > ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Make a hole for the new items
 			$newSibLeft = ($sibLeft > $myRight) ? $sibLeft - $myWidth : $sibLeft;
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($right . ' = ' . $right . ' + ' . $db->q($myWidth))
-				->where($right . ' >= ' . $db->q($newSibLeft));
+				->update($db->quoteName($this->getTableName()))
+				->set($right . ' = ' . $right . ' + ' . $db->quote($myWidth))
+				->where($right . ' >= ' . $db->quote($newSibLeft));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $left . ' + ' . $db->q($myWidth))
-				->where($left . ' >= ' . $db->q($newSibLeft));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $left . ' + ' . $db->quote($myWidth))
+				->where($left . ' >= ' . $db->quote($newSibLeft));
 			$db->setQuery($query)->execute();
 
 			// Move node and subnodes
 			$moveRight = $newSibLeft - $myLeft;
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight))
-				->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))
-				->where($left . ' <= 0 - ' . $db->q($myLeft))
-				->where($right . ' >= 0 - ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $db->quote(0) . ' - ' . $left . ' + ' . $db->quote($moveRight))
+				->set($right . ' = ' . $db->quote(0) . ' - ' . $right . ' + ' . $db->quote($moveRight))
+				->where($left . ' <= 0 - ' . $db->quote($myLeft))
+				->where($right . ' >= 0 - ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Commit the transaction
@@ -907,8 +907,8 @@ class FOFTableNested extends FOFTable
         }
 
 		$db    = $this->getDbo();
-		$left  = $db->qn($this->getColumnAlias('lft'));
-		$right = $db->qn($this->getColumnAlias('rgt'));
+		$left  = $db->quoteName($this->getColumnAlias('lft'));
+		$right = $db->quoteName($this->getColumnAlias('rgt'));
 
 		// Get node metrics
 		$myLeft  = $this->lft;
@@ -925,50 +925,50 @@ class FOFTableNested extends FOFTable
 		{
 			// Temporary remove subtree being moved
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set("$left = " . $db->q(0) . " - $left")
-				->set("$right = " . $db->q(0) . " - $right")
-				->where($left . ' >= ' . $db->q($myLeft))
-				->where($right . ' <= ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set("$left = " . $db->quote(0) . " - $left")
+				->set("$right = " . $db->quote(0) . " - $right")
+				->where($left . ' >= ' . $db->quote($myLeft))
+				->where($right . ' <= ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Close hole left behind
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $left . ' - ' . $db->q($myWidth))
-				->where($left . ' > ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $left . ' - ' . $db->quote($myWidth))
+				->where($left . ' > ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($right . ' = ' . $right . ' - ' . $db->q($myWidth))
-				->where($right . ' > ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($right . ' = ' . $right . ' - ' . $db->quote($myWidth))
+				->where($right . ' > ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Make a hole for the new items
 			$newSibRight = ($sibRight > $myRight) ? $sibRight - $myWidth : $sibRight;
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $left . ' + ' . $db->q($myWidth))
-				->where($left . ' > ' . $db->q($newSibRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $left . ' + ' . $db->quote($myWidth))
+				->where($left . ' > ' . $db->quote($newSibRight));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($right . ' = ' . $right . ' + ' . $db->q($myWidth))
-				->where($right . ' > ' . $db->q($newSibRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($right . ' = ' . $right . ' + ' . $db->quote($myWidth))
+				->where($right . ' > ' . $db->quote($newSibRight));
 			$db->setQuery($query)->execute();
 
 			// Move node and subnodes
 			$moveRight = ($sibRight > $myRight) ? $sibRight - $myRight : $sibRight - $myRight + $myWidth;
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight))
-				->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))
-				->where($left . ' <= 0 - ' . $db->q($myLeft))
-				->where($right . ' >= 0 - ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $db->quote(0) . ' - ' . $left . ' + ' . $db->quote($moveRight))
+				->set($right . ' = ' . $db->quote(0) . ' - ' . $right . ' + ' . $db->quote($moveRight))
+				->where($left . ' <= 0 - ' . $db->quote($myLeft))
+				->where($right . ' >= 0 - ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Commit the transaction
@@ -1049,8 +1049,8 @@ class FOFTableNested extends FOFTable
         }
 
 		$db    = $this->getDbo();
-		$left  = $db->qn($this->getColumnAlias('lft'));
-		$right = $db->qn($this->getColumnAlias('rgt'));
+		$left  = $db->quoteName($this->getColumnAlias('lft'));
+		$right = $db->quoteName($this->getColumnAlias('rgt'));
 
 		// Get node metrics
 		$myLeft  = $this->lft;
@@ -1067,50 +1067,50 @@ class FOFTableNested extends FOFTable
 		{
 			// Temporary remove subtree being moved
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set("$left = " . $db->q(0) . " - $left")
-				->set("$right = " . $db->q(0) . " - $right")
-				->where($left . ' >= ' . $db->q($myLeft))
-				->where($right . ' <= ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set("$left = " . $db->quote(0) . " - $left")
+				->set("$right = " . $db->quote(0) . " - $right")
+				->where($left . ' >= ' . $db->quote($myLeft))
+				->where($right . ' <= ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Close hole left behind
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $left . ' - ' . $db->q($myWidth))
-				->where($left . ' > ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $left . ' - ' . $db->quote($myWidth))
+				->where($left . ' > ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($right . ' = ' . $right . ' - ' . $db->q($myWidth))
-				->where($right . ' > ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($right . ' = ' . $right . ' - ' . $db->quote($myWidth))
+				->where($right . ' > ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Make a hole for the new items
 			$newParentLeft = ($parentLeft > $myRight) ? $parentLeft - $myWidth : $parentLeft;
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($right . ' = ' . $right . ' + ' . $db->q($myWidth))
-				->where($right . ' >= ' . $db->q($newParentLeft));
+				->update($db->quoteName($this->getTableName()))
+				->set($right . ' = ' . $right . ' + ' . $db->quote($myWidth))
+				->where($right . ' >= ' . $db->quote($newParentLeft));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $left . ' + ' . $db->q($myWidth))
-				->where($left . ' > ' . $db->q($newParentLeft));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $left . ' + ' . $db->quote($myWidth))
+				->where($left . ' > ' . $db->quote($newParentLeft));
 			$db->setQuery($query)->execute();
 
 			// Move node and subnodes
 			$moveRight = $newParentLeft - $myLeft + 1;
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight))
-				->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))
-				->where($left . ' <= 0 - ' . $db->q($myLeft))
-				->where($right . ' >= 0 - ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $db->quote(0) . ' - ' . $left . ' + ' . $db->quote($moveRight))
+				->set($right . ' = ' . $db->quote(0) . ' - ' . $right . ' + ' . $db->quote($moveRight))
+				->where($left . ' <= 0 - ' . $db->quote($myLeft))
+				->where($right . ' >= 0 - ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Commit the transaction
@@ -1153,8 +1153,8 @@ class FOFTableNested extends FOFTable
         }
 
 		$db    = $this->getDbo();
-		$left  = $db->qn($this->getColumnAlias('lft'));
-		$right = $db->qn($this->getColumnAlias('rgt'));
+		$left  = $db->quoteName($this->getColumnAlias('lft'));
+		$right = $db->quoteName($this->getColumnAlias('rgt'));
 
 		// Get node metrics
 		$myLeft  = $this->lft;
@@ -1171,50 +1171,50 @@ class FOFTableNested extends FOFTable
 		{
 			// Temporary remove subtree being moved
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set("$left = " . $db->q(0) . " - $left")
-				->set("$right = " . $db->q(0) . " - $right")
-				->where($left . ' >= ' . $db->q($myLeft))
-				->where($right . ' <= ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set("$left = " . $db->quote(0) . " - $left")
+				->set("$right = " . $db->quote(0) . " - $right")
+				->where($left . ' >= ' . $db->quote($myLeft))
+				->where($right . ' <= ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Close hole left behind
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $left . ' - ' . $db->q($myWidth))
-				->where($left . ' > ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $left . ' - ' . $db->quote($myWidth))
+				->where($left . ' > ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($right . ' = ' . $right . ' - ' . $db->q($myWidth))
-				->where($right . ' > ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($right . ' = ' . $right . ' - ' . $db->quote($myWidth))
+				->where($right . ' > ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Make a hole for the new items
 			$newLeft = ($parentRight > $myRight) ? $parentRight - $myWidth : $parentRight;
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $left . ' + ' . $db->q($myWidth))
-				->where($left . ' >= ' . $db->q($newLeft));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $left . ' + ' . $db->quote($myWidth))
+				->where($left . ' >= ' . $db->quote($newLeft));
 			$db->setQuery($query)->execute();
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($right . ' = ' . $right . ' + ' . $db->q($myWidth))
-				->where($right . ' >= ' . $db->q($newLeft));
+				->update($db->quoteName($this->getTableName()))
+				->set($right . ' = ' . $right . ' + ' . $db->quote($myWidth))
+				->where($right . ' >= ' . $db->quote($newLeft));
 			$db->setQuery($query)->execute();
 
 			// Move node and subnodes
 			$moveRight = ($parentRight > $myRight) ? $parentRight - $myRight - 1 : $parentRight - $myRight - 1 + $myWidth;
 
 			$query = $db->getQuery(true)
-				->update($db->qn($this->getTableName()))
-				->set($left . ' = ' . $db->q(0) . ' - ' . $left . ' + ' . $db->q($moveRight))
-				->set($right . ' = ' . $db->q(0) . ' - ' . $right . ' + ' . $db->q($moveRight))
-				->where($left . ' <= 0 - ' . $db->q($myLeft))
-				->where($right . ' >= 0 - ' . $db->q($myRight));
+				->update($db->quoteName($this->getTableName()))
+				->set($left . ' = ' . $db->quote(0) . ' - ' . $left . ' + ' . $db->quote($moveRight))
+				->set($right . ' = ' . $db->quote(0) . ' - ' . $right . ' + ' . $db->quote($moveRight))
+				->where($left . ' <= 0 - ' . $db->quote($myLeft))
+				->where($right . ' >= 0 - ' . $db->quote($myRight));
 			$db->setQuery($query)->execute();
 
 			// Commit the transaction
@@ -1295,18 +1295,18 @@ class FOFTableNested extends FOFTable
 		{
 			$db = $this->getDbo();
 
-			$fldLft = $db->qn($this->getColumnAlias('lft'));
-			$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+			$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+			$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
 			$query = $db->getQuery(true)
-				->select('(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth'))
-				->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-				->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-				->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-				->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-				->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
-				->group($db->qn('node') . '.' . $fldLft)
-				->order($db->qn('node') . '.' . $fldLft . ' ASC');
+				->select('(COUNT(' . $db->quoteName('parent') . '.' . $fldLft . ') - 1) AS ' . $db->quoteName('depth'))
+				->from($db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('node'))
+				->join('CROSS', $db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('parent'))
+				->where($db->quoteName('node') . '.' . $fldLft . ' >= ' . $db->quoteName('parent') . '.' . $fldLft)
+				->where($db->quoteName('node') . '.' . $fldLft . ' <= ' . $db->quoteName('parent') . '.' . $fldRgt)
+				->where($db->quoteName('node') . '.' . $fldLft . ' = ' . $db->quote($this->lft))
+				->group($db->quoteName('node') . '.' . $fldLft)
+				->order($db->quoteName('node') . '.' . $fldLft . ' ASC');
 
 			$this->treeDepth = $db->setQuery($query, 0, 1)->loadResult();
 		}
@@ -1338,23 +1338,23 @@ class FOFTableNested extends FOFTable
 		{
 			$db = $this->getDbo();
 
-			$fldLft = $db->qn($this->getColumnAlias('lft'));
-			$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+			$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+			$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
 			$query = $db->getQuery(true)
-				->select($db->qn('parent') . '.' . $fldLft)
-				->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-				->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-				->where($db->qn('node') . '.' . $fldLft . ' > ' . $db->qn('parent') . '.' . $fldLft)
-				->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-				->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
-				->order($db->qn('parent') . '.' . $fldLft . ' DESC');
+				->select($db->quoteName('parent') . '.' . $fldLft)
+				->from($db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('node'))
+				->join('CROSS', $db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('parent'))
+				->where($db->quoteName('node') . '.' . $fldLft . ' > ' . $db->quoteName('parent') . '.' . $fldLft)
+				->where($db->quoteName('node') . '.' . $fldLft . ' <= ' . $db->quoteName('parent') . '.' . $fldRgt)
+				->where($db->quoteName('node') . '.' . $fldLft . ' = ' . $db->quote($this->lft))
+				->order($db->quoteName('parent') . '.' . $fldLft . ' DESC');
 			$targetLft = $db->setQuery($query, 0, 1)->loadResult();
 
 			$table = $this->getClone();
 			$table->reset();
 			$this->treeParent = $table
-				->whereRaw($fldLft . ' = ' . $db->q($targetLft))
+				->whereRaw($fldLft . ' = ' . $db->quote($targetLft))
 				->get()->current();
 		}
 
@@ -1564,12 +1564,12 @@ class FOFTableNested extends FOFTable
 
 		$db = $this->getDbo();
 
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
-		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' >= ' . $db->qn('node') . '.' . $fldLft);
-		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' <= ' . $db->qn('node') . '.' . $fldRgt);
-		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' = ' . $db->q($this->lft));
+		$this->whereRaw($db->quoteName('parent') . '.' . $fldLft . ' >= ' . $db->quoteName('node') . '.' . $fldLft);
+		$this->whereRaw($db->quoteName('parent') . '.' . $fldLft . ' <= ' . $db->quoteName('node') . '.' . $fldRgt);
+		$this->whereRaw($db->quoteName('parent') . '.' . $fldLft . ' = ' . $db->quote($this->lft));
 	}
 
 	/**
@@ -1583,12 +1583,12 @@ class FOFTableNested extends FOFTable
 
 		$db = $this->getDbo();
 
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
-		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' > ' . $db->qn('node') . '.' . $fldLft);
-		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' < ' . $db->qn('node') . '.' . $fldRgt);
-		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' = ' . $db->q($this->lft));
+		$this->whereRaw($db->quoteName('parent') . '.' . $fldLft . ' > ' . $db->quoteName('node') . '.' . $fldLft);
+		$this->whereRaw($db->quoteName('parent') . '.' . $fldLft . ' < ' . $db->quoteName('node') . '.' . $fldRgt);
+		$this->whereRaw($db->quoteName('parent') . '.' . $fldLft . ' = ' . $db->quote($this->lft));
 	}
 
 	/**
@@ -1600,12 +1600,12 @@ class FOFTableNested extends FOFTable
 	{
 		$db = $this->getDbo();
 
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
 		$parent = $this->getParent();
-		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' > ' . $db->q($parent->lft));
-		$this->whereRaw($db->qn('node') . '.' . $fldRgt . ' < ' . $db->q($parent->rgt));
+		$this->whereRaw($db->quoteName('node') . '.' . $fldLft . ' > ' . $db->quote($parent->lft));
+		$this->whereRaw($db->quoteName('node') . '.' . $fldRgt . ' < ' . $db->quote($parent->rgt));
 	}
 
 	/**
@@ -1630,10 +1630,10 @@ class FOFTableNested extends FOFTable
 	{
 		$db = $this->getDbo();
 
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
-		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' = ' . $db->qn('node') . '.' . $fldRgt . ' - ' . $db->q(1));
+		$this->whereRaw($db->quoteName('node') . '.' . $fldLft . ' = ' . $db->quoteName('node') . '.' . $fldRgt . ' - ' . $db->quote(1));
 	}
 
 	/**
@@ -1647,12 +1647,12 @@ class FOFTableNested extends FOFTable
 
 		$db = $this->getDbo();
 
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
-		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft);
-		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt);
-		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' = ' . $db->q($this->lft));
+		$this->whereRaw($db->quoteName('node') . '.' . $fldLft . ' >= ' . $db->quoteName('parent') . '.' . $fldLft);
+		$this->whereRaw($db->quoteName('node') . '.' . $fldLft . ' <= ' . $db->quoteName('parent') . '.' . $fldRgt);
+		$this->whereRaw($db->quoteName('parent') . '.' . $fldLft . ' = ' . $db->quote($this->lft));
 	}
 
 	/**
@@ -1666,12 +1666,12 @@ class FOFTableNested extends FOFTable
 
 		$db = $this->getDbo();
 
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
-		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' > ' . $db->qn('parent') . '.' . $fldLft);
-		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' < ' . $db->qn('parent') . '.' . $fldRgt);
-		$this->whereRaw($db->qn('parent') . '.' . $fldLft . ' = ' . $db->q($this->lft));
+		$this->whereRaw($db->quoteName('node') . '.' . $fldLft . ' > ' . $db->quoteName('parent') . '.' . $fldLft);
+		$this->whereRaw($db->quoteName('node') . '.' . $fldLft . ' < ' . $db->quoteName('parent') . '.' . $fldRgt);
+		$this->whereRaw($db->quoteName('parent') . '.' . $fldLft . ' = ' . $db->quote($this->lft));
 	}
 
 	/**
@@ -1689,43 +1689,43 @@ class FOFTableNested extends FOFTable
 
 		$db = $this->getDbo();
 
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
 		$subQuery = $db->getQuery(true)
 			->select(array(
-				$db->qn('node') . '.' . $fldLft,
-				'(COUNT(*) - 1) AS ' . $db->qn('depth')
+				$db->quoteName('node') . '.' . $fldLft,
+				'(COUNT(*) - 1) AS ' . $db->quoteName('depth')
 			))
-			->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-			->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-			->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-			->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-			->where($db->qn('node') . '.' . $fldLft . ' = ' . $db->q($this->lft))
-			->group($db->qn('node') . '.' . $fldLft)
-			->order($db->qn('node') . '.' . $fldLft . ' ASC');
+			->from($db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('node'))
+			->from($db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('parent'))
+			->where($db->quoteName('node') . '.' . $fldLft . ' >= ' . $db->quoteName('parent') . '.' . $fldLft)
+			->where($db->quoteName('node') . '.' . $fldLft . ' <= ' . $db->quoteName('parent') . '.' . $fldRgt)
+			->where($db->quoteName('node') . '.' . $fldLft . ' = ' . $db->quote($this->lft))
+			->group($db->quoteName('node') . '.' . $fldLft)
+			->order($db->quoteName('node') . '.' . $fldLft . ' ASC');
 
 		$query = $db->getQuery(true)
 			->select(array(
-				$db->qn('node') . '.' . $fldLft,
-				'(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - (' .
-				$db->qn('sub_tree') . '.' . $db->qn('depth') . ' + 1)) AS ' . $db->qn('depth')
+				$db->quoteName('node') . '.' . $fldLft,
+				'(COUNT(' . $db->quoteName('parent') . '.' . $fldLft . ') - (' .
+				$db->quoteName('sub_tree') . '.' . $db->quoteName('depth') . ' + 1)) AS ' . $db->quoteName('depth')
 			))
-			->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-			->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-			->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('sub_parent'))
-			->join('CROSS', '(' . $subQuery . ') AS ' . $db->qn('sub_tree'))
-			->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-			->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-			->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('sub_parent') . '.' . $fldLft)
-			->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('sub_parent') . '.' . $fldRgt)
-			->where($db->qn('sub_parent') . '.' . $fldLft . ' = ' . $db->qn('sub_tree') . '.' . $fldLft)
-			->group($db->qn('node') . '.' . $fldLft)
+			->from($db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('node'))
+			->join('CROSS', $db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('parent'))
+			->join('CROSS', $db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('sub_parent'))
+			->join('CROSS', '(' . $subQuery . ') AS ' . $db->quoteName('sub_tree'))
+			->where($db->quoteName('node') . '.' . $fldLft . ' >= ' . $db->quoteName('parent') . '.' . $fldLft)
+			->where($db->quoteName('node') . '.' . $fldLft . ' <= ' . $db->quoteName('parent') . '.' . $fldRgt)
+			->where($db->quoteName('node') . '.' . $fldLft . ' >= ' . $db->quoteName('sub_parent') . '.' . $fldLft)
+			->where($db->quoteName('node') . '.' . $fldLft . ' <= ' . $db->quoteName('sub_parent') . '.' . $fldRgt)
+			->where($db->quoteName('sub_parent') . '.' . $fldLft . ' = ' . $db->quoteName('sub_tree') . '.' . $fldLft)
+			->group($db->quoteName('node') . '.' . $fldLft)
 			->having(array(
-				$db->qn('depth') . ' > ' . $db->q(0),
-				$db->qn('depth') . ' <= ' . $db->q(1),
+				$db->quoteName('depth') . ' > ' . $db->quote(0),
+				$db->quoteName('depth') . ' <= ' . $db->quote(1),
 			))
-			->order($db->qn('node') . '.' . $fldLft . ' ASC');
+			->order($db->quoteName('node') . '.' . $fldLft . ' ASC');
 
 		$leftValues = $db->setQuery($query)->loadColumn();
 
@@ -1736,10 +1736,10 @@ class FOFTableNested extends FOFTable
 
 		array_walk($leftValues, function (&$item, $key) use (&$db)
 		{
-			$item = $db->q($item);
+			$item = $db->quote($item);
 		});
 
-		$this->whereRaw($db->qn('node') . '.' . $fldLft . ' IN (' . implode(',', $leftValues) . ')');
+		$this->whereRaw($db->quoteName('node') . '.' . $fldLft . ' IN (' . implode(',', $leftValues) . ')');
 	}
 
 	/**
@@ -1753,9 +1753,9 @@ class FOFTableNested extends FOFTable
 	{
 		$db = $this->getDbo();
 
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
 
-		$this->whereRaw('NOT(' . $db->qn('node') . '.' . $fldLft . ' = ' . $db->q($node->lft) . ')');
+		$this->whereRaw('NOT(' . $db->quoteName('node') . '.' . $fldLft . ' = ' . $db->quote($node->lft) . ')');
 	}
 
 	/**
@@ -1811,12 +1811,12 @@ class FOFTableNested extends FOFTable
 			// First try to get the record with the minimum ID
 			$db = $this->getDbo();
 
-			$fldLft = $db->qn($this->getColumnAlias('lft'));
-			$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+			$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+			$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
 			$subQuery = $db->getQuery(true)
 				->select('MIN(' . $fldLft . ')')
-				->from($db->qn($this->getTableName()));
+				->from($db->quoteName($this->getTableName()));
 
 			try
 			{
@@ -1843,17 +1843,17 @@ class FOFTableNested extends FOFTable
 				// Find the node with depth = 0, lft < our lft and rgt > our right. That's our root node.
 				$query = $db->getQuery(true)
 					->select(array(
-                        $db->qn('node') . '.' . $fldLft,
-						'(COUNT(' . $db->qn('parent') . '.' . $fldLft . ') - 1) AS ' . $db->qn('depth')
+                        $db->quoteName('node') . '.' . $fldLft,
+						'(COUNT(' . $db->quoteName('parent') . '.' . $fldLft . ') - 1) AS ' . $db->quoteName('depth')
 					))
-					->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-					->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-					->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-					->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-					->where($db->qn('node') . '.' . $fldLft . ' < ' . $db->q($this->lft))
-					->where($db->qn('node') . '.' . $fldRgt . ' > ' . $db->q($this->rgt))
-					->having($db->qn('depth') . ' = ' . $db->q(0))
-					->group($db->qn('node') . '.' . $fldLft);
+					->from($db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('node'))
+					->join('CROSS', $db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('parent'))
+					->where($db->quoteName('node') . '.' . $fldLft . ' >= ' . $db->quoteName('parent') . '.' . $fldLft)
+					->where($db->quoteName('node') . '.' . $fldLft . ' <= ' . $db->quoteName('parent') . '.' . $fldRgt)
+					->where($db->quoteName('node') . '.' . $fldLft . ' < ' . $db->quote($this->lft))
+					->where($db->quoteName('node') . '.' . $fldRgt . ' > ' . $db->quote($this->rgt))
+					->having($db->quoteName('depth') . ' = ' . $db->quote(0))
+					->group($db->quoteName('node') . '.' . $fldLft);
 
 				// Get the lft value
 				$targetLeft = $db->setQuery($query)->loadResult();
@@ -1869,7 +1869,7 @@ class FOFTableNested extends FOFTable
 					$table = $this->getClone();
 					$table->reset();
 					$this->treeRoot = $table
-						->whereRaw($fldLft . ' = ' . $db->q($targetLeft))
+						->whereRaw($fldLft . ' = ' . $db->quote($targetLeft))
 						->get(0, 1)->current();
 				}
 				catch (\RuntimeException $e)
@@ -2051,8 +2051,8 @@ class FOFTableNested extends FOFTable
 	{
 		$db = $this->getDbo();
 
-		$fldLft = $db->qn($this->getColumnAlias('lft'));
-		$fldRgt = $db->qn($this->getColumnAlias('rgt'));
+		$fldLft = $db->quoteName($this->getColumnAlias('lft'));
+		$fldRgt = $db->quoteName($this->getColumnAlias('rgt'));
 
 		if (empty($key) || !$this->hasField($key))
 		{
@@ -2064,21 +2064,21 @@ class FOFTableNested extends FOFTable
 			$column = 'title';
 		}
 
-		$fldKey = $db->qn($this->getColumnAlias($key));
-		$fldColumn = $db->qn($this->getColumnAlias($column));
+		$fldKey = $db->quoteName($this->getColumnAlias($key));
+		$fldColumn = $db->quoteName($this->getColumnAlias($column));
 
 		$query = $db->getQuery(true)
 			->select(array(
-				$db->qn('node') . '.' . $fldKey,
-				$db->qn('node') . '.' . $fldColumn,
-				'(COUNT(' . $db->qn('parent') . '.' . $fldKey . ') - 1) AS ' . $db->qn('depth')
+				$db->quoteName('node') . '.' . $fldKey,
+				$db->quoteName('node') . '.' . $fldColumn,
+				'(COUNT(' . $db->quoteName('parent') . '.' . $fldKey . ') - 1) AS ' . $db->quoteName('depth')
 			))
-			->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'))
-			->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'))
-			->where($db->qn('node') . '.' . $fldLft . ' >= ' . $db->qn('parent') . '.' . $fldLft)
-			->where($db->qn('node') . '.' . $fldLft . ' <= ' . $db->qn('parent') . '.' . $fldRgt)
-			->group($db->qn('node') . '.' . $fldLft)
-			->order($db->qn('node') . '.' . $fldLft . ' ASC');
+			->from($db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('node'))
+			->join('CROSS', $db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('parent'))
+			->where($db->quoteName('node') . '.' . $fldLft . ' >= ' . $db->quoteName('parent') . '.' . $fldLft)
+			->where($db->quoteName('node') . '.' . $fldLft . ' <= ' . $db->quoteName('parent') . '.' . $fldRgt)
+			->group($db->quoteName('node') . '.' . $fldLft)
+			->order($db->quoteName('node') . '.' . $fldLft . ' ASC');
 
 		$tempResults = $db->setQuery($query)->loadAssocList();
 		$ret = array();
@@ -2164,13 +2164,13 @@ class FOFTableNested extends FOFTable
 		$db = $this->getDbo();
 
 		$query = $db->getQuery(true)
-			->select($db->qn('node') . '.*')
-			->from($db->qn($this->getTableName()) . ' AS ' . $db->qn('node'));
+			->select($db->quoteName('node') . '.*')
+			->from($db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('node'));
 
 		if ($this->treeNestedGet)
 		{
 			$query
-				->join('CROSS', $db->qn($this->getTableName()) . ' AS ' . $db->qn('parent'));
+				->join('CROSS', $db->quoteName($this->getTableName()) . ' AS ' . $db->quoteName('parent'));
 		}
 
 		// Apply custom WHERE clauses

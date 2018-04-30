@@ -297,7 +297,7 @@ class MenusModelItems extends JModelList
 
 		// Join over the menu types.
 		$query->select($db->quoteName(array('mt.id', 'mt.title'), array('menutype_id', 'menutype_title')))
-			->join('LEFT', $db->quoteName('#__menu_types', 'mt') . ' ON ' . $db->qn('mt.menutype') . ' = ' . $db->qn('a.menutype'));
+			->join('LEFT', $db->quoteName('#__menu_types', 'mt') . ' ON ' . $db->quoteName('mt.menutype') . ' = ' . $db->quoteName('a.menutype'));
 
 		// Join over the associations.
 		$assoc = JLanguageAssociations::isEnabled();
@@ -368,13 +368,13 @@ class MenusModelItems extends JModelList
 		{
 			// Load all menu types we have manage access
 			$query2 = $this->getDbo()->getQuery(true)
-				->select($this->getDbo()->qn(array('id', 'menutype')))
+				->select($this->getDbo()->quoteName(array('id', 'menutype')))
 				->from('#__menu_types')
 				->where('client_id = ' . (int) $this->getState('filter.client_id'))
 				->order('title');
 
 			// Show protected items on explicit filter only
-			$query->where('a.menutype != ' . $db->q('main'));
+			$query->where('a.menutype != ' . $db->quote('main'));
 
 			$menuTypes = $this->getDbo()->setQuery($query2)->loadObjectList();
 
@@ -386,7 +386,7 @@ class MenusModelItems extends JModelList
 				{
 					if ($user->authorise('core.manage', 'com_menus.menu.' . (int) $type->id))
 					{
-						$types[] = $query->q($type->menutype);
+						$types[] = $query->quote($type->menutype);
 					}
 				}
 
@@ -484,8 +484,8 @@ class MenusModelItems extends JModelList
 		$query = $this->_db->getQuery(true);
 
 		$query->select('a.*')
-			->from($this->_db->qn('#__menu_types', 'a'))
-			->where('menutype = ' . $this->_db->q($menuType));
+			->from($this->_db->quoteName('#__menu_types', 'a'))
+			->where('menutype = ' . $this->_db->quote($menuType));
 
 		$cMenu = $this->_db->setQuery($query)->loadObject();
 

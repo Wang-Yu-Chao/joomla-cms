@@ -133,12 +133,12 @@ class JTableNestedTest extends TestCaseDatabase
 		$this->assertEquals(1, $this->class->getRootId(), 'Checks for lft = 0 case.');
 
 		// Change the lft of the root node.
-		self::$driver->setQuery('UPDATE #__categories SET lft = 99, alias = ' . self::$driver->q('root') . ' WHERE id = 1')->execute();
+		self::$driver->setQuery('UPDATE #__categories SET lft = 99, alias = ' . self::$driver->quote('root') . ' WHERE id = 1')->execute();
 		NestedTable::resetRootId();
 		$this->assertEquals(1, $this->class->getRootId(), 'Checks for alias = root case.');
 
 		// Change the alias of the root node.
-		self::$driver->setQuery('UPDATE #__categories SET alias = ' . self::$driver->q('foo') . ' WHERE id = 1')->execute();
+		self::$driver->setQuery('UPDATE #__categories SET alias = ' . self::$driver->quote('foo') . ' WHERE id = 1')->execute();
 		NestedTable::resetRootId();
 		$this->assertFalse($this->class->getRootId(), 'Checks for failure.');
 	}
@@ -521,7 +521,7 @@ class JTableNestedTest extends TestCaseDatabase
 		$this->assertEquals('node001/node103/node204', $paths[204]->path, 'Checks node 204.');
 
 		// Check for special case where 'root' is removed.
-		self::$driver->setQuery('UPDATE #__categories SET alias = ' . self::$driver->q('root') . ' WHERE id = 1')
+		self::$driver->setQuery('UPDATE #__categories SET alias = ' . self::$driver->quote('root') . ' WHERE id = 1')
 			->execute();
 
 		$this->class->rebuildPath(203);

@@ -69,9 +69,9 @@ class FOFUtilsFilescheck
 
 		// Retrieve the date and version from the #__extensions table
 		$db = FOFPlatform::getInstance()->getDbo();
-		$query = $db->getQuery(true)->select('*')->from($db->qn('#__extensions'))
-					->where($db->qn('element') . ' = ' . $db->q($this->option))
-					->where($db->qn('type') . ' = ' . $db->q('component'));
+		$query = $db->getQuery(true)->select('*')->from($db->quoteName('#__extensions'))
+					->where($db->quoteName('element') . ' = ' . $db->quote($this->option))
+					->where($db->quoteName('type') . ' = ' . $db->quote('component'));
 		$extension = $db->setQuery($query)->loadObject();
 
 		// Check the version and date against those from #__extensions. I hate heavily nested IFs as much as the next

@@ -65,10 +65,10 @@ abstract class ContentHelperAssociation extends CategoryHelperAssociation
 
 							$db    = JFactory::getDbo();
 							$query = $db->getQuery(true)
-								->select($db->qn('state'))
-								->from($db->qn('#__content'))
-								->where($db->qn('id') . ' = ' . (int) $assocId)
-								->where($db->qn('access') . ' IN (' . $groups . ')');
+								->select($db->quoteName('state'))
+								->from($db->quoteName('#__content'))
+								->where($db->quoteName('id') . ' = ' . (int) $assocId)
+								->where($db->quoteName('access') . ' IN (' . $groups . ')');
 							$db->setQuery($query);
 
 							$result = (int) $db->loadResult();

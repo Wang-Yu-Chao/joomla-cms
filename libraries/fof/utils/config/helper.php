@@ -37,10 +37,10 @@ class FOFUtilsConfigHelper
 		$db = FOFPlatform::getInstance()->getDbo();
 
 		$sql = $db->getQuery(true)
-				  ->select($db->qn('params'))
-				  ->from($db->qn('#__extensions'))
-				  ->where($db->qn('type') . ' = ' . $db->q('component'))
-				  ->where($db->qn('element') . " = " . $db->q($component));
+				  ->select($db->quoteName('params'))
+				  ->from($db->quoteName('#__extensions'))
+				  ->where($db->quoteName('type') . ' = ' . $db->quote('component'))
+				  ->where($db->quoteName('element') . " = " . $db->quote($component));
 		$db->setQuery($sql);
 		$config_ini = $db->loadResult();
 

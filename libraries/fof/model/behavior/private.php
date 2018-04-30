@@ -51,9 +51,9 @@ class FOFModelBehaviorPrivate extends FOFModelBehavior
 		$db    = FOFPlatform::getInstance()->getDbo();
 
 		$alias = $model->getTableAlias();
-		$alias = $alias ? $db->qn($alias) . '.' : '';
+		$alias = $alias ? $db->quoteName($alias) . '.' : '';
 
-		$query->where($alias . $db->qn($createdField) . ' = ' . $db->q($user_id));
+		$query->where($alias . $db->quoteName($createdField) . ' = ' . $db->quote($user_id));
 	}
 
 	/**

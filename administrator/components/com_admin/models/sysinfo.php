@@ -440,7 +440,7 @@ class AdminModelSysInfo extends JModelLegacy
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true)
 			->select('*')
-			->from($db->qn('#__extensions'));
+			->from($db->quoteName('#__extensions'));
 		$db->setQuery($query);
 
 		try

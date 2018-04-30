@@ -1153,8 +1153,8 @@ abstract class FOFDatabaseQuery
 	 *
 	 * Usage:
 	 * $query->quote('fulltext');
-	 * $query->q('fulltext');
-	 * $query->q(array('option', 'fulltext'));
+	 * $query->quote('fulltext');
+	 * $query->quote(array('option', 'fulltext'));
 	 *
 	 * @param   mixed    $text    A string or an array of strings to quote.
 	 * @param   boolean  $escape  True to escape the string, false to leave it unchanged.
@@ -1185,7 +1185,7 @@ abstract class FOFDatabaseQuery
 	 *
 	 * Usage:
 	 * $query->quoteName('#__a');
-	 * $query->qn('#__a');
+	 * $query->quoteName('#__a');
 	 *
 	 * @param   mixed  $name  The identifier name to wrap in quotes, or an array of identifier names to wrap in quotes.
 	 *                        Each type supports dot-notation name.

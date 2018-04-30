@@ -903,7 +903,7 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 			}
 
 			// Add the search tuple to the query.
-			$query->where($this->_db->qn($this->_tbl . '.' . $field) . ' = ' . $this->_db->q($value));
+			$query->where($this->_db->quoteName($this->_tbl . '.' . $field) . ' = ' . $this->_db->quote($value));
 		}
 
 		// Do I have any joined table?
@@ -1101,8 +1101,8 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 		{
 			$db      = $this->_db;
 			$query   = $db->getQuery(true)
-				->select($db->qn('master') . '.' . $db->qn($k))
-				->from($db->qn($this->_tbl) . ' AS ' . $db->qn('master'));
+				->select($db->quoteName('master') . '.' . $db->quoteName($k))
+				->from($db->quoteName($this->_tbl) . ' AS ' . $db->quoteName('master'));
 			$tableNo = 0;
 
 			foreach ($joins as $table)
@@ -1110,18 +1110,18 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 				$tableNo++;
 				$query->select(
 					array(
-						'COUNT(DISTINCT ' . $db->qn('t' . $tableNo) . '.' . $db->qn($table['idfield']) . ') AS ' . $db->qn($table['idalias'])
+						'COUNT(DISTINCT ' . $db->quoteName('t' . $tableNo) . '.' . $db->quoteName($table['idfield']) . ') AS ' . $db->quoteName($table['idalias'])
 					)
 				);
-				$query->join('LEFT', $db->qn($table['name']) .
-					' AS ' . $db->qn('t' . $tableNo) .
-					' ON ' . $db->qn('t' . $tableNo) . '.' . $db->qn($table['joinfield']) .
-					' = ' . $db->qn('master') . '.' . $db->qn($k)
+				$query->join('LEFT', $db->quoteName($table['name']) .
+					' AS ' . $db->quoteName('t' . $tableNo) .
+					' ON ' . $db->quoteName('t' . $tableNo) . '.' . $db->quoteName($table['joinfield']) .
+					' = ' . $db->quoteName('master') . '.' . $db->quoteName($k)
 				);
 			}
 
-			$query->where($db->qn('master') . '.' . $db->qn($k) . ' = ' . $db->q($this->$k));
-			$query->group($db->qn('master') . '.' . $db->qn($k));
+			$query->where($db->quoteName('master') . '.' . $db->quoteName($k) . ' = ' . $db->quote($this->$k));
+			$query->group($db->quoteName('master') . '.' . $db->quoteName($k));
 			$this->_db->setQuery((string) $query);
 
 			if (version_compare(JVERSION, '3.0', 'ge'))
@@ -1374,23 +1374,23 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
         }
 
 		// Select the primary key and ordering values from the table.
-		$query->select(array($this->_db->qn($this->_tbl_key), $this->_db->qn($ordering_field)));
+		$query->select(array($this->_db->quoteName($this->_tbl_key), $this->_db->quoteName($ordering_field)));
 		$query->from($this->_tbl);
 
 		// If the movement delta is negative move the row up.
 
 		if ($delta < 0)
 		{
-			$query->where($this->_db->qn($ordering_field) . ' < ' . $this->_db->q((int) $this->$ordering_field));
-			$query->order($this->_db->qn($ordering_field) . ' DESC');
+			$query->where($this->_db->quoteName($ordering_field) . ' < ' . $this->_db->quote((int) $this->$ordering_field));
+			$query->order($this->_db->quoteName($ordering_field) . ' DESC');
 		}
 
 		// If the movement delta is positive move the row down.
 
 		elseif ($delta > 0)
 		{
-			$query->where($this->_db->qn($ordering_field) . ' > ' . $this->_db->q((int) $this->$ordering_field));
-			$query->order($this->_db->qn($ordering_field) . ' ASC');
+			$query->where($this->_db->quoteName($ordering_field) . ' > ' . $this->_db->quote((int) $this->$ordering_field));
+			$query->order($this->_db->quoteName($ordering_field) . ' ASC');
 		}
 
 		// Add the custom WHERE clause if set.
@@ -1411,16 +1411,16 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 			// Update the ordering field for this instance to the row's ordering value.
 			$query = $this->_db->getQuery(true);
 			$query->update($this->_tbl);
-			$query->set($this->_db->qn($ordering_field) . ' = ' . $this->_db->q((int) $row->$ordering_field));
-			$query->where($this->_tbl_key . ' = ' . $this->_db->q($this->$k));
+			$query->set($this->_db->quoteName($ordering_field) . ' = ' . $this->_db->quote((int) $row->$ordering_field));
+			$query->where($this->_tbl_key . ' = ' . $this->_db->quote($this->$k));
 			$this->_db->setQuery($query);
 			$this->_db->execute();
 
 			// Update the ordering field for the row to this instance's ordering value.
 			$query = $this->_db->getQuery(true);
 			$query->update($this->_tbl);
-			$query->set($this->_db->qn($ordering_field) . ' = ' . $this->_db->q((int) $this->$ordering_field));
-			$query->where($this->_tbl_key . ' = ' . $this->_db->q($row->$k));
+			$query->set($this->_db->quoteName($ordering_field) . ' = ' . $this->_db->quote((int) $this->$ordering_field));
+			$query->where($this->_tbl_key . ' = ' . $this->_db->quote($row->$k));
 			$this->_db->setQuery($query);
 			$this->_db->execute();
 
@@ -1432,8 +1432,8 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 			// Update the ordering field for this instance.
 			$query = $this->_db->getQuery(true);
 			$query->update($this->_tbl);
-			$query->set($this->_db->qn($ordering_field) . ' = ' . $this->_db->q((int) $this->$ordering_field));
-			$query->where($this->_tbl_key . ' = ' . $this->_db->q($this->$k));
+			$query->set($this->_db->quoteName($ordering_field) . ' = ' . $this->_db->quote((int) $this->$ordering_field));
+			$query->where($this->_tbl_key . ' = ' . $this->_db->quote($this->$k));
 			$this->_db->setQuery($query);
 			$this->_db->execute();
 		}
@@ -1472,10 +1472,10 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 
 		// Get the primary keys and ordering values for the selection.
 		$query = $this->_db->getQuery(true);
-		$query->select($this->_tbl_key . ', ' . $this->_db->qn($order_field));
+		$query->select($this->_tbl_key . ', ' . $this->_db->quoteName($order_field));
 		$query->from($this->_tbl);
-		$query->where($this->_db->qn($order_field) . ' >= ' . $this->_db->q(0));
-		$query->order($this->_db->qn($order_field));
+		$query->where($this->_db->quoteName($order_field) . ' >= ' . $this->_db->quote(0));
+		$query->order($this->_db->quoteName($order_field));
 
 		// Setup the extra where and ordering clause data.
 
@@ -1502,8 +1502,8 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 					// Update the row ordering field.
 					$query = $this->_db->getQuery(true);
 					$query->update($this->_tbl);
-					$query->set($this->_db->qn($order_field) . ' = ' . $this->_db->q($i + 1));
-					$query->where($this->_tbl_key . ' = ' . $this->_db->q($row->$k));
+					$query->set($this->_db->quoteName($order_field) . ' = ' . $this->_db->quote($i + 1));
+					$query->where($this->_tbl_key . ' = ' . $this->_db->quote($row->$k));
 					$this->_db->setQuery($query);
 					$this->_db->execute();
 				}
@@ -1560,14 +1560,14 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 
 
 		$query = $this->_db->getQuery(true)
-			->update($this->_db->qn($this->_tbl))
+			->update($this->_db->quoteName($this->_tbl))
 			->set(
 				array(
-					$this->_db->qn($fldLockedBy) . ' = ' . $this->_db->q((int) $userId),
-					$this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($time)
+					$this->_db->quoteName($fldLockedBy) . ' = ' . $this->_db->quote((int) $userId),
+					$this->_db->quoteName($fldLockedOn) . ' = ' . $this->_db->quote($time)
 				)
 			)
-			->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
+			->where($this->_db->quoteName($this->_tbl_key) . ' = ' . $this->_db->quote($this->$k));
 		$this->_db->setQuery((string) $query);
 
 		$this->$fldLockedBy = $userId;
@@ -1607,14 +1607,14 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 		}
 
 		$query = $this->_db->getQuery(true)
-			->update($this->_db->qn($this->_tbl))
+			->update($this->_db->quoteName($this->_tbl))
 			->set(
 				array(
-					$this->_db->qn($fldLockedBy) . ' = 0',
-					$this->_db->qn($fldLockedOn) . ' = ' . $this->_db->q($this->_db->getNullDate())
+					$this->_db->quoteName($fldLockedBy) . ' = 0',
+					$this->_db->quoteName($fldLockedOn) . ' = ' . $this->_db->quote($this->_db->getNullDate())
 				)
 			)
-			->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($this->$k));
+			->where($this->_db->quoteName($this->_tbl_key) . ' = ' . $this->_db->quote($this->$k));
 		$this->_db->setQuery((string) $query);
 
 		$this->$fldLockedBy = 0;
@@ -1800,21 +1800,21 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 		}
 
 		$query = $this->_db->getQuery(true)
-			->update($this->_db->qn($this->_tbl))
-			->set($this->_db->qn($enabledName) . ' = ' . (int) $publish);
+			->update($this->_db->quoteName($this->_tbl))
+			->set($this->_db->quoteName($enabledName) . ' = ' . (int) $publish);
 
 		$checkin = in_array($locked_byName, $this->getKnownFields());
 
 		if ($checkin)
 		{
 			$query->where(
-				' (' . $this->_db->qn($locked_byName) .
-					' = 0 OR ' . $this->_db->qn($locked_byName) . ' = ' . (int) $user_id . ')', 'AND'
+				' (' . $this->_db->quoteName($locked_byName) .
+					' = 0 OR ' . $this->_db->quoteName($locked_byName) . ' = ' . (int) $user_id . ')', 'AND'
 			);
 		}
 
 		// TODO Rewrite this statment using IN. Check if it work in SQLServer and PostgreSQL
-		$cids = $this->_db->qn($k) . ' = ' . implode(' OR ' . $this->_db->qn($k) . ' = ', $cid);
+		$cids = $this->_db->quoteName($k) . ' = ' . implode(' OR ' . $this->_db->quoteName($k) . ' = ', $cid);
 
 		$query->where('(' . $cids . ')');
 
@@ -1894,7 +1894,7 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 		$query = $this->_db->getQuery(true);
 		$query->delete();
 		$query->from($this->_tbl);
-		$query->where($this->_tbl_key . ' = ' . $this->_db->q($pk));
+		$query->where($this->_tbl_key . ' = ' . $this->_db->quote($pk));
 		$this->_db->setQuery($query);
 
 		$this->_db->execute();
@@ -1940,8 +1940,8 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 			// Check the row in by primary key.
 			$query = $this->_db->getQuery(true)
 						  ->update($this->_tbl)
-						  ->set($this->_db->qn($hits_field) . ' = (' . $this->_db->qn($hits_field) . ' + 1)')
-						  ->where($this->_tbl_key . ' = ' . $this->_db->q($pk));
+						  ->set($this->_db->quoteName($hits_field) . ' = (' . $this->_db->quoteName($hits_field) . ' + 1)')
+						  ->where($this->_tbl_key . ' = ' . $this->_db->quote($pk));
 
 			$this->_db->setQuery($query)->execute();
 
@@ -1949,9 +1949,9 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 			if(!$this->$k)
 			{
 				$query = $this->_db->getQuery(true)
-							  ->select($this->_db->qn($hits_field))
-							  ->from($this->_db->qn($this->_tbl))
-							  ->where($this->_db->qn($this->_tbl_key) . ' = ' . $this->_db->q($pk));
+							  ->select($this->_db->quoteName($hits_field))
+							  ->from($this->_db->quoteName($this->_tbl))
+							  ->where($this->_db->quoteName($this->_tbl_key) . ' = ' . $this->_db->quote($pk));
 
 				$this->$hits_field = $this->_db->setQuery($query)->loadResult();
 			}
@@ -2643,10 +2643,10 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 			// Make sure we don't have a duplicate slug on this table
 			$db    = $this->getDbo();
 			$query = $db->getQuery(true)
-				->select($db->qn($slug))
+				->select($db->quoteName($slug))
 				->from($this->_tbl)
-				->where($db->qn($slug) . ' = ' . $db->q($this->$slug))
-				->where('NOT ' . $db->qn($this->_tbl_key) . ' = ' . $db->q($this->{$this->_tbl_key}));
+				->where($db->quoteName($slug) . ' = ' . $db->quote($this->$slug))
+				->where('NOT ' . $db->quoteName($this->_tbl_key) . ' = ' . $db->quote($this->{$this->_tbl_key}));
 			$db->setQuery($query);
 			$existingItems = $db->loadAssocList();
 
@@ -2658,10 +2658,10 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 				$count++;
 				$newSlug = $this->$slug . '-' . $count;
 				$query   = $db->getQuery(true)
-					->select($db->qn($slug))
+					->select($db->quoteName($slug))
 					->from($this->_tbl)
-					->where($db->qn($slug) . ' = ' . $db->q($newSlug))
-					->where('NOT '. $db->qn($this->_tbl_key) . ' = ' . $db->q($this->{$this->_tbl_key}));
+					->where($db->quoteName($slug) . ' = ' . $db->quote($newSlug))
+					->where('NOT '. $db->quoteName($this->_tbl_key) . ' = ' . $db->quote($this->{$this->_tbl_key}));
 				$db->setQuery($query);
 				$existingItems = $db->loadAssocList();
 			}
@@ -3579,7 +3579,7 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 		if ($orderingFilter)
 		{
 			$filterValue = $this->$orderingFilter;
-			$this->reorder($orderingFilter ? $this->_db->qn($orderingFilter) . ' = ' . $this->_db->q($filterValue) : '');
+			$this->reorder($orderingFilter ? $this->_db->quoteName($orderingFilter) . ' = ' . $this->_db->quote($filterValue) : '');
 		}
 
 		// Set the error to empty and return true.
@@ -3607,7 +3607,7 @@ class FOFTable extends FOFUtilsObject implements JTableInterface
 
 		// Get the largest ordering value for a given where clause.
 		$query = $this->_db->getQuery(true);
-		$query->select('MAX('.$this->_db->qn($ordering).')');
+		$query->select('MAX('.$this->_db->quoteName($ordering).')');
 		$query->from($this->_tbl);
 
 		if ($where)

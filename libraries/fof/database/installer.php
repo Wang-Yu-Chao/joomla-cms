@@ -672,7 +672,7 @@ class FOFDatabaseInstaller
 
 		$collation = $utf8mb4Support ? 'utf8mb4_unicode_ci' : ($utf8Support ? 'utf_general_ci' : 'latin1_swedish_ci');
 
-		$query = 'SHOW TABLE STATUS LIKE ' . $this->db->q($tableName);
+		$query = 'SHOW TABLE STATUS LIKE ' . $this->db->quote($tableName);
 
 		try
 		{
@@ -741,7 +741,7 @@ class FOFDatabaseInstaller
 	{
 		$collation = $this->getTableCollation($tableName);
 
-		$query = 'SHOW FULL COLUMNS FROM ' . $this->db->qn($tableName) . ' LIKE ' . $this->db->q($columnName);
+		$query = 'SHOW FULL COLUMNS FROM ' . $this->db->quoteName($tableName) . ' LIKE ' . $this->db->quote($columnName);
 
 		try
 		{
@@ -994,7 +994,7 @@ class FOFDatabaseInstaller
 			try
 			{
 				$indices          = array();
-				$query            = 'SHOW INDEXES FROM ' . $this->db->qn($tableName);
+				$query            = 'SHOW INDEXES FROM ' . $this->db->quoteName($tableName);
 				$indexDefinitions = $this->db->setQuery($query)->loadAssocList();
 
 				if (!empty($indexDefinitions) && is_array($indexDefinitions))

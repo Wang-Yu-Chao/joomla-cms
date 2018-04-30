@@ -476,11 +476,11 @@ class ComponentAdapter extends InstallerAdapter
 			$db = $this->db;
 
 			$query = $db->getQuery(true)
-				->select($db->qn('extension_id'))
-				->from($db->qn('#__extensions'))
-				->where($db->qn('name') . ' = ' . $db->q($this->extension->name))
-				->where($db->qn('type') . ' = ' . $db->q($this->extension->type))
-				->where($db->qn('element') . ' = ' . $db->q($this->extension->element));
+				->select($db->quoteName('extension_id'))
+				->from($db->quoteName('#__extensions'))
+				->where($db->quoteName('name') . ' = ' . $db->quote($this->extension->name))
+				->where($db->quoteName('type') . ' = ' . $db->quote($this->extension->type))
+				->where($db->quoteName('element') . ' = ' . $db->quote($this->extension->element));
 
 			$db->setQuery($query);
 
@@ -605,11 +605,11 @@ class ComponentAdapter extends InstallerAdapter
 			$db = $this->parent->getDbo();
 
 			$query = $db->getQuery(true)
-				->select($db->qn('extension_id'))
-				->from($db->qn('#__extensions'))
-				->where($db->qn('name') . ' = ' . $db->q($this->extension->name))
-				->where($db->qn('type') . ' = ' . $db->q($this->extension->type))
-				->where($db->qn('element') . ' = ' . $db->q($this->extension->element));
+				->select($db->quoteName('extension_id'))
+				->from($db->quoteName('#__extensions'))
+				->where($db->quoteName('name') . ' = ' . $db->quote($this->extension->name))
+				->where($db->quoteName('type') . ' = ' . $db->quote($this->extension->type))
+				->where($db->quoteName('element') . ' = ' . $db->quote($this->extension->element));
 
 			$db->setQuery($query);
 
@@ -1113,7 +1113,7 @@ class ComponentAdapter extends InstallerAdapter
 			->select('id')
 			->from('#__menu')
 			->where($db->quoteName('client_id') . ' = 1')
-			->where($db->quoteName('menutype') . ' = ' . $db->q('main'))
+			->where($db->quoteName('menutype') . ' = ' . $db->quote('main'))
 			->where($db->quoteName('component_id') . ' = ' . (int) $id);
 
 		$db->setQuery($query);
@@ -1181,7 +1181,7 @@ class ComponentAdapter extends InstallerAdapter
 			->where('type = ' . $db->quote('component'))
 			->where('('
 				. 'link LIKE ' . $db->quote('index.php?option=' . $option) . ' OR '
-				. 'link LIKE ' . $db->q($db->escape('index.php?option=' . $option . '&') . '%', false)
+				. 'link LIKE ' . $db->quote($db->escape('index.php?option=' . $option . '&') . '%', false)
 				. ')');
 
 		if (isset($clientId))
@@ -1338,12 +1338,12 @@ class ComponentAdapter extends InstallerAdapter
 			$query = $db->getQuery(true)
 				->select('id')
 				->from('#__menu')
-				->where('menutype = ' . $db->q($data['menutype']))
+				->where('menutype = ' . $db->quote($data['menutype']))
 				->where('client_id = 1')
-				->where('link = ' . $db->q($data['link']))
-				->where('type = ' . $db->q($data['type']))
-				->where('parent_id = ' . $db->q($data['parent_id']))
-				->where('home = ' . $db->q($data['home']));
+				->where('link = ' . $db->quote($data['link']))
+				->where('type = ' . $db->quote($data['type']))
+				->where('parent_id = ' . $db->quote($data['parent_id']))
+				->where('home = ' . $db->quote($data['home']));
 
 			$db->setQuery($query);
 			$menu_id = $db->loadResult();

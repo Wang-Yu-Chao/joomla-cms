@@ -118,7 +118,7 @@ class FOFFormFieldTag extends JFormFieldTag implements FOFFormField
 			$query->where('a.language = ' . $db->quote($this->element['language']));
 		}
 
-		$query->where($db->qn('a.lft') . ' > 0');
+		$query->where($db->quoteName('a.lft') . ' > 0');
 
 		// Filter to only load active items
 

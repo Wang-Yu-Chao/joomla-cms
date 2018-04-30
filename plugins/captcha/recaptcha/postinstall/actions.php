@@ -24,10 +24,10 @@ function recaptcha_postinstall_condition()
 
 	$query = $db->getQuery(true)
 		->select('1')
-		->from($db->qn('#__extensions'))
-		->where($db->qn('name') . ' = ' . $db->q('plg_captcha_recaptcha'))
-		->where($db->qn('enabled') . ' = 1')
-		->where($db->qn('params') . ' LIKE ' . $db->q('%1.0%'));
+		->from($db->quoteName('#__extensions'))
+		->where($db->quoteName('name') . ' = ' . $db->quote('plg_captcha_recaptcha'))
+		->where($db->quoteName('enabled') . ' = 1')
+		->where($db->quoteName('params') . ' LIKE ' . $db->quote('%1.0%'));
 	$db->setQuery($query);
 	$enabled_plugins = $db->loadObjectList();
 
@@ -47,8 +47,8 @@ function recaptcha_postinstall_action()
 
 	$query = $db->getQuery(true)
 		->select('extension_id')
-		->from($db->qn('#__extensions'))
-		->where($db->qn('name') . ' = ' . $db->q('plg_captcha_recaptcha'));
+		->from($db->quoteName('#__extensions'))
+		->where($db->quoteName('name') . ' = ' . $db->quote('plg_captcha_recaptcha'));
 	$db->setQuery($query);
 	$e_id = $db->loadResult();
 

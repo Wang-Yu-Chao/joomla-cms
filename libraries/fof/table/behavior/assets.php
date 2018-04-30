@@ -125,9 +125,9 @@ class FOFTableBehaviorAssets extends FOFTableBehavior
                 $db = $table->getDbo();
 
 				$query = $db->getQuery(true)
-				            ->update($db->qn($table->getTableName()))
-				            ->set($db->qn($asset_id_field).' = ' . (int) $table->$asset_id_field)
-				            ->where($db->qn($k) . ' = ' . (int) $table->$k);
+				            ->update($db->quoteName($table->getTableName()))
+				            ->set($db->quoteName($asset_id_field).' = ' . (int) $table->$asset_id_field)
+				            ->where($db->quoteName($k) . ' = ' . (int) $table->$k);
 
 				$db->setQuery($query)->execute();
 			}
